@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Zenject;
+
 namespace UISystem
 {
-    public class UIPanelSwitcher : MonoBehaviour, IUIPanelSwitcher
+    public class UIPanelSwitcher : IUIPanelSwitcher
     {
-        [SerializeField] private List<UIPanel> uIPanels = new();
+        private readonly Dictionary<UIPanelType, UIPanel> uIPanelsByType = new();
 
-        private Dictionary<UIPanelType, UIPanel> uIPanelsByType = new();
-
-        void Awake()
+        [Inject]
+        public UIPanelSwitcher(List<UIPanel> uIPanels)
         {
             foreach (var uiPanel in uIPanels)
             {
@@ -25,7 +26,7 @@ namespace UISystem
             }
         }
 
-        void IUIPanelSwitcher.Switch(UIPanelType type)
+        public void Switch(UIPanelType type)
         {
             if (!uIPanelsByType.TryGetValue(type, out var panel))
                 return;

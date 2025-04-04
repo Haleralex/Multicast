@@ -5,8 +5,8 @@ public enum UIPanelType
 {
     NoType,
     MainMenu,
-    Start,
-    GamePlay,
     Settings,
+    GamePlay,
+    LevelComplete,
 }
 }

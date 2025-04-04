@@ -2,7 +2,7 @@ using System;
 using Newtonsoft.Json;
 using UnityEngine;
 
-public class ProgressManager
+public class ProgressManager : IProgressManager
 {
     public ProgressManager()
     {

@@ -8,12 +8,12 @@ using Zenject;
 using System.Linq;
 public class LevelModel
 {
-    private readonly ProgressManager progressManager;
+    private readonly IProgressManager progressManager;
 
     private string fullWordToCompleteLevel;
 
     [Inject]
-    public LevelModel(ProgressManager progressManager)
+    public LevelModel(IProgressManager progressManager)
     {
         this.progressManager = progressManager;
     }

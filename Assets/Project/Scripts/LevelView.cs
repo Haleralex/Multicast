@@ -5,95 +5,46 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-public class LevelView : MonoBehaviour
+public class LevelView : MonoBehaviour, ILevelView
 {
-    [SerializeField] private ClusterManipulator clusterManipulator;
-    [SerializeField] private UIClusterFactory clusterFactory;
-    [SerializeField] private List<UIWord> words;
-    [SerializeField] private Button resetButton;
-    [SerializeField] private Button validateButton;
-    [SerializeField] private GameObject levelCompletePanel;
-    [Inject] private readonly LevelPresenter levelPresenter;
+    public event Action<GameProgress> GameFieldChanged;
+    public event Action NextLevelPressed;
+    public event Action ValidateLevelPressed;
 
-    void Start()
-    {
-        levelPresenter.Initialize();
-    }
+    [SerializeField] private Button validateButton;
+
+    [Inject] private readonly IClusterManipulator clusterManipulator;
+
 
     void OnEnable()
     {
         clusterManipulator.ClusterMappingUpdated += OnClusterMappingUpdated;
-        resetButton.onClick.AddListener(ResetProgress);
-        validateButton.onClick.AddListener(ValidateLevel);
+        validateButton.onClick.AddListener(ValidateLevelButtonPressed);
     }
 
     void OnDisable()
     {
         clusterManipulator.ClusterMappingUpdated -= OnClusterMappingUpdated;
-        resetButton.onClick.RemoveListener(ResetProgress);
-        validateButton.onClick.RemoveListener(ValidateLevel);
+        validateButton.onClick.RemoveListener(ValidateLevelButtonPressed);
     }
 
     private void OnClusterMappingUpdated(Dictionary<int, int> dictionary)
     {
         var newProgress = new GameProgress()
         {
-            CurrentLevel = levelPresenter.GetCurrentLevel(),
             ClusterMapping = dictionary
         };
-        levelPresenter.UpdateProgress(newProgress);
-    }
-    public void InitializeLevel(LevelData levelData)
-    {
-        levelCompletePanel.SetActive(false);
-        var wordIndex = 0;
-        var emptyClusters = new List<UIWordEmptyCluster>();
-        var wordlusters = new List<UIClusterElement>();
-        int clusterIndex = 0;
-        foreach (var cluster in levelData.Words)
-        {
-            words[wordIndex].Initialize(cluster.Value.ToArray());
-            emptyClusters.AddRange(words[wordIndex].ActiveEmptyClusters.ToList());
-            wordIndex++;
-            foreach (var word in cluster.Value)
-            {
-                var clusterElement = clusterFactory.CreateClusterElement();
-                clusterElement.Initialize(word, clusterIndex++);
-                wordlusters.Add(clusterElement);
-            }
-        }
-        clusterManipulator.Initialize(emptyClusters, wordlusters);
+        GameFieldChanged?.Invoke(newProgress);
     }
 
-    public void InitializeProgress(GameProgress currentProgress)
-    {
-        clusterManipulator.HandleProgress(currentProgress.ClusterMapping);
-    }
 
-    public void ResetProgress()
+    public void ValidateLevelButtonPressed()
     {
-        AsyncSceneLoader.LoadMenuScene();
-    }
-
-    public void ValidateLevel()
-    {
-        var validator = new Validator();
-        var currentProgress = clusterManipulator.GetFullString();
-        var fullWordToCompleteLevel = levelPresenter.GetFullWord();
-        var isValid = validator.IsLevelValid(currentProgress, fullWordToCompleteLevel);
-
-        if (isValid)
-        {
-            levelCompletePanel.SetActive(true);
-        }
-        else
-        {
-            Debug.Log("Level not completed yet.");
-        }
+        ValidateLevelPressed?.Invoke();
     }
 
     public void SetNextLevel()
     {
-        levelPresenter.SetNextLevel();
+        NextLevelPressed?.Invoke();
     }
 }

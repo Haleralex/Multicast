@@ -1,11 +1,7 @@
 using UnityEngine;
+using Zenject;
 
-public class UIClusterFactory : MonoBehaviour
+public class UIClusterFactory : PlaceholderFactory<UIClusterElement>
 {
-    [SerializeField] private UIClusterElement clusterElementPrefab;
-    public UIClusterElement CreateClusterElement()
-    {
-        var clusterElement = Instantiate(clusterElementPrefab, transform);
-        return clusterElement;
-    }
+    
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ClusterManipulator : MonoBehaviour
+public class ClusterManipulator : MonoBehaviour, IClusterManipulator
 {
     public event Action<Dictionary<int, int>> ClusterMappingUpdated;
     private RectTransform clusterCanvasRectTransform;

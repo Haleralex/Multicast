@@ -4,24 +4,30 @@ using System.Collections.Generic;
 using Zenject;
 using System;
 
-public class LevelPresenter
+public class LevelPresenter : IInitializable
 {
     private readonly LevelModel levelModel;
-    private readonly LevelView levelView;
+    private readonly ILevelView levelView;
+
+    private readonly ILevelInitializer levelInitializer;
 
     [Inject]
-    public LevelPresenter(LevelModel levelModel, LevelView levelView)
+    public LevelPresenter(
+        LevelModel levelModel,
+        ILevelView levelView,
+        ILevelInitializer levelInitializer
+        )
     {
         this.levelModel = levelModel;
         this.levelView = levelView;
+        this.levelInitializer = levelInitializer;
     }
 
     public async void Initialize()
     {
         var currentProgress = levelModel.GetCurrentProgress();
         var currentLevelData = await levelModel.GetLevelData(currentProgress.CurrentLevel);
-        levelView.InitializeLevel(currentLevelData);
-        levelView.InitializeProgress(currentProgress);
+        levelInitializer.InitializeLevel(currentLevelData, currentProgress);
     }
 
     public int GetCurrentLevel()
@@ -43,7 +49,7 @@ public class LevelPresenter
         levelModel.UpdateProgress(currentProgress);
 
         var currentLevelData = await levelModel.GetLevelData(currentProgress.CurrentLevel);
-        levelView.InitializeLevel(currentLevelData);
+        levelInitializer.InitializeLevel(currentLevelData);
     }
 
     public string GetFullWord()

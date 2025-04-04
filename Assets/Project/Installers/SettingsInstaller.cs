@@ -15,11 +15,10 @@ namespace Settings
             Container.Bind<VolumeSetter>().AsTransient();
             Container.Bind<VibrationSetter>().AsTransient();
 
-            Container.Bind<SettingsModel>().AsSingle();
             Container.Bind<SettingsView>()
                 .FromComponentInHierarchy()
                 .AsSingle();
-            Container.Bind<SettingsPresenter>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<SettingsPresenter>().AsSingle().NonLazy();
         }
     }
 }
