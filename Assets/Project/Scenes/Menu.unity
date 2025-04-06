@@ -331,9 +331,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1818822015}
   - {fileID: 113667140}
   - {fileID: 509750624}
+  - {fileID: 2023847837}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &228522822
@@ -594,9 +594,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
   _monoInstallers:
-  - {fileID: 1818822014}
   - {fileID: 113667139}
   - {fileID: 509750625}
+  - {fileID: 2023847836}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -986,7 +986,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 2054648805}
-  ScreenType: 4
+  ScreenType: 2
 --- !u!1 &688990596
 GameObject:
   m_ObjectHideFlags: 0
@@ -1171,7 +1171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c1d3cabcea29c148ad7a1fd42ec6ecf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIPanelType: 4
+  UIPanelType: 2
 --- !u!1 &881139037
 GameObject:
   m_ObjectHideFlags: 0
@@ -2188,6 +2188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1448324153}
   - component: {fileID: 1448324155}
+  - component: {fileID: 1448324156}
   m_Layer: 0
   m_Name: Menu
   m_TagString: Untagged
@@ -2224,6 +2225,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIPanelType: 1
+--- !u!114 &1448324156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1448324152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7035f81a56c8f4946974c38e17926a59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playButton: {fileID: 1545931105}
 --- !u!1 &1449076426
 GameObject:
   m_ObjectHideFlags: 0
@@ -2624,7 +2638,6 @@ GameObject:
   - component: {fileID: 1690855142}
   - component: {fileID: 1690855141}
   - component: {fileID: 1690855140}
-  - component: {fileID: 1690855144}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2716,19 +2729,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1690855144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1690855139}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9a1f6f97f30b544182cfdde89921786, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playButton: {fileID: 1545931105}
 --- !u!1 &1721567546
 GameObject:
   m_ObjectHideFlags: 0
@@ -2997,50 +2997,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1751880435}
   m_CullTransparentMesh: 1
---- !u!1 &1818822013
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1818822015}
-  - component: {fileID: 1818822014}
-  m_Layer: 0
-  m_Name: GameInstaller
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1818822014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1818822013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68de1b9e1f9042841bb1cb8be9e6691f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1818822015
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1818822013}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 195759363}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1910048291
 GameObject:
   m_ObjectHideFlags: 0
@@ -3050,7 +3006,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1910048292}
-  - component: {fileID: 1910048293}
   m_Layer: 5
   m_Name: StartButton
   m_TagString: Untagged
@@ -3078,20 +3033,50 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 290}
   m_SizeDelta: {x: 600, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1910048293
+--- !u!1 &2023847835
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2023847837}
+  - component: {fileID: 2023847836}
+  m_Layer: 0
+  m_Name: GameplayStarterInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2023847836
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1910048291}
+  m_GameObject: {fileID: 2023847835}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e96742c95bd0cf46b1b616d7b39611d, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c5fbb5c92980ff4ba6d1eb5c77e6682, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  button: {fileID: 1545931105}
-  ScreenType: 2
+--- !u!4 &2023847837
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023847835}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 195759363}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2054648803
 GameObject:
   m_ObjectHideFlags: 0
@@ -3260,7 +3245,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttons:
-  - {fileID: 1910048293}
   - {fileID: 677370092}
   backButtons:
   - {fileID: 881139038}

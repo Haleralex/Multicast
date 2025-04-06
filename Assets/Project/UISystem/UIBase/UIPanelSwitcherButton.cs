@@ -3,25 +3,27 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UISystem
-{public class UIPanelSwitcherButton : MonoBehaviour
 {
-    public event Action<UIPanelType> ButtonClicked;
-    [SerializeField] private Button button;
-    public UIPanelType ScreenType;
-
-    void OnEnable()
+    public class UIPanelSwitcherButton : MonoBehaviour
     {
-        button.onClick.AddListener(OnButtonClick);
-    }
+        public event Action<UIPanelType> ButtonClicked;
+        [SerializeField] private Button button;
+        public UIPanelType ScreenType;
 
-    void OnDisable()
-    {
-        button.onClick.RemoveListener(OnButtonClick);
-    }
+        void OnEnable()
+        {
+            button.onClick.AddListener(OnButtonClick);
+        }
 
-    void OnButtonClick()
-    {
-        ButtonClicked?.Invoke(ScreenType);
+        void OnDisable()
+        {
+            button.onClick.RemoveListener(OnButtonClick);
+        }
+
+        void OnButtonClick()
+        {
+            button.OnSelect(null);
+            ButtonClicked?.Invoke(ScreenType);
+        }
     }
-}
 }

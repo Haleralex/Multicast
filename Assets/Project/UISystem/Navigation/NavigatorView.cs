@@ -17,6 +17,7 @@ namespace Navigation
         {
             foreach (var button in buttons)
                 button.ButtonClicked += OnScreenSwitcherClicked;
+                
             foreach (var button in backButtons)
                 button.ButtonClicked += OnBackButtonClicked;
         }
