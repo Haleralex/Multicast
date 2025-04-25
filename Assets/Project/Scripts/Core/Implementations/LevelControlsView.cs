@@ -8,18 +8,15 @@ public class LevelControlsView : MonoBehaviour
     public event Action NextLevelPressed;
 
     [SerializeField] private Button validateButton;
-    /* [SerializeField] private Button nextLevelButton; */
 
     private void OnEnable()
     {
         validateButton.onClick.AddListener(OnValidateButtonPressed);
-        /* nextLevelButton.onClick.AddListener(OnNextLevelButtonPressed); */
     }
 
     private void OnDisable()
     {
         validateButton.onClick.RemoveListener(OnValidateButtonPressed);
-        /* nextLevelButton.onClick.RemoveListener(OnNextLevelButtonPressed); */
     }
 
     private void OnValidateButtonPressed()
@@ -27,8 +24,8 @@ public class LevelControlsView : MonoBehaviour
         ValidateLevelPressed?.Invoke();
     }
 
-    /* private void OnNextLevelButtonPressed()
+    public void SetValidateButtonInteractable(bool isInteractable)
     {
-        NextLevelPressed?.Invoke();
-    } */
+        validateButton.interactable = isInteractable;
+    }
 }
