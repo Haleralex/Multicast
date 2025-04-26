@@ -1,35 +1,35 @@
 {
     "Words": [
         {
-            "fullWord": "привет",
+            "fullWord": "hello",
             "clusters": [
-                "пр",
-                "ив",
-                "ет"
+                "he",
+                "ll",
+                "o"
             ],
             "missingClusters": [0]
         },
         {
-            "fullWord": "ворота",
+            "fullWord": "garden",
             "clusters": [
-                "вор",
-                "ота"
+                "gar",
+                "den"
             ],
             "missingClusters": [1]
         },
         {
-            "fullWord": "калина",
+            "fullWord": "simple",
             "clusters": [
-                "кали",
-                "на"
+                "sim",
+                "ple"
             ],
             "missingClusters": [1]
         },
         {
-            "fullWord": "базука",
+            "fullWord": "rocket",
             "clusters": [
-                "баз",
-                "ука"
+                "roc",
+                "ket"
             ],
             "missingClusters": [0]
         }

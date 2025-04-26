@@ -1,36 +1,36 @@
 {
     "Words": [
         {
-            "fullWord": "собака",
+            "fullWord": "rabbit",
             "clusters": [
-                "со",
-                "ба",
-                "ка"
+                "ra",
+                "bb",
+                "it"
             ],
             "missingClusters": [1]
         },
         {
-            "fullWord": "кролик",
+            "fullWord": "dolphin",
             "clusters": [
-                "кро",
-                "лик"
+                "dol",
+                "phin"
             ],
             "missingClusters": [0]
         },
         {
-            "fullWord": "курица",
+            "fullWord": "chicken",
             "clusters": [
-                "ку",
-                "ри",
-                "ца"
+                "chi",
+                "ck",
+                "en"
             ],
             "missingClusters": [2]
         },
         {
-            "fullWord": "павлин",
+            "fullWord": "peacock",
             "clusters": [
-                "пав",
-                "лин"
+                "pea",
+                "cock"
             ],
             "missingClusters": [1]
         }

@@ -1,34 +1,34 @@
 {
     "Words": [
         {
-            "fullWord": "москва",
+            "fullWord": "london",
             "clusters": [
-                "мос",
-                "ква"
+                "lon",
+                "don"
             ],
             "missingClusters": [0]
         },
         {
-            "fullWord": "казань",
+            "fullWord": "paris",
             "clusters": [
-                "ка",
-                "зань"
+                "pa",
+                "ris"
             ],
             "missingClusters": [1]
         },
         {
-            "fullWord": "сургут",
+            "fullWord": "berlin",
             "clusters": [
-                "сур",
-                "гут"
+                "ber",
+                "lin"
             ],
             "missingClusters": [0]
         },
         {
-            "fullWord": "ростов",
+            "fullWord": "madrid",
             "clusters": [
-                "рос",
-                "тов"
+                "mad",
+                "rid"
             ],
             "missingClusters": [1]
         }

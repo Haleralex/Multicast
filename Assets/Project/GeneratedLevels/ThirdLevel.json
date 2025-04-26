@@ -1,38 +1,37 @@
 {
     "Words": [
         {
-            "fullWord": "яблоко",
+            "fullWord": "apple",
             "clusters": [
-                "яб",
-                "ло",
-                "ко"
+                "ap",
+                "ple"
             ],
             "missingClusters": [0]
         },
         {
-            "fullWord": "ананас",
+            "fullWord": "banana",
             "clusters": [
-                "ана",
-                "нас"
+                "ba",
+                "na",
+                "na"
             ],
             "missingClusters": [1]
         },
         {
-            "fullWord": "персик",
+            "fullWord": "orange",
             "clusters": [
-                "пер",
-                "сик"
+                "or",
+                "ange"
             ],
             "missingClusters": [0]
         },
         {
-            "fullWord": "малина",
+            "fullWord": "cherry",
             "clusters": [
-                "ма",
-                "ли",
-                "на"
+                "che",
+                "rry"
             ],
-            "missingClusters": [2]
+            "missingClusters": [1]
         }
     ]
 }
