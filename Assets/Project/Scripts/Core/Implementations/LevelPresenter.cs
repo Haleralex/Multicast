@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Zenject;
 using System;
 using Core;
+using System.Linq;
 
 public class LevelPresenter : IInitializable, IDisposable
 {
@@ -118,8 +119,10 @@ public class LevelPresenter : IInitializable, IDisposable
         model.UpdateProgress(currentProgress);
 
         view.UpdateUIFromMappings(model.WordPiecesMappings);
+        if (model.GuessedWords.Count == 4)
+            OnValidateLevelPressed();
     }
-
+    
     private void ResetAllWordPiecesToInitialPositions()
     {
         model.ResetWordPieceMappings();

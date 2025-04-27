@@ -6,10 +6,10 @@ namespace Settings
     {
         public override void InstallBindings()
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_ANDROID 
         Container.Bind<IVibrator>().To<AndroidVibrator>().AsSingle().NonLazy();
 #endif
-#if UNITY_EDITOR
+#if !UNITY_ANDROID
             Container.Bind<IVibrator>().To<MokVibrator>().AsSingle().NonLazy();
 #endif
             Container.Bind<VolumeSetter>().AsTransient();

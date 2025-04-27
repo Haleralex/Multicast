@@ -34,9 +34,6 @@ public class LevelView : MonoBehaviour, ILevelView
 
         levelCompleteMessageView.NextLevelPressed += OnNextLevelPressed;
         levelCompleteMessageView.GoToMenuPressed += GoTomenuPressed;
-
-        levelControlsView.ValidateLevelPressed += OnValidateLevelPressed;
-        levelControlsView.NextLevelPressed += OnNextLevelPressed;
     }
 
     
@@ -49,9 +46,6 @@ public class LevelView : MonoBehaviour, ILevelView
 
         levelCompleteMessageView.NextLevelPressed -= OnNextLevelPressed;
         levelCompleteMessageView.GoToMenuPressed -= GoTomenuPressed;
-
-        levelControlsView.ValidateLevelPressed -= OnValidateLevelPressed;
-        levelControlsView.NextLevelPressed -= OnNextLevelPressed;
     }
 
     public void SetUIElements(List<WordPieceSlot> slots, List<WordPiece> wordPieces)
@@ -74,7 +68,6 @@ public class LevelView : MonoBehaviour, ILevelView
     public void UpdateUIFromMappings(IReadOnlyDictionary<int, int> mappings)
     {
         wordSlotsView.UpdateSlotsFromMappings(mappings);
-
         foreach (var mapping in mappings)
         {
             if (wordSlotsView.TryGetSlot(mapping.Value, out var slot))

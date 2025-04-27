@@ -125,6 +125,6 @@ MonoBehaviour:
   m_CcdManagedData:
     EnvironmentId: 6cb3b5b2-dda1-4064-88a0-f10256cf7f88
     EnvironmentName: production
-    BucketId: 4f3d9254-7d78-4e46-affe-175933119140
+    BucketId: 50f2c449-c585-46a2-aaf0-3180c55d8609
     Badge: latest
     State: 0
