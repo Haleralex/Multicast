@@ -38,14 +38,14 @@ jobs:
         with:
           targetPlatform: WebGL
           unityVersion: 6000.0.33f1 # Указываем Unity 6.0
-          buildPath: build/WebGL
+          buildPath: WebGLBuild
 
       # Сохранение артефакта сборки
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
           name: webgl-build
-          path: build/WebGL
+          path: WebGLBuild
 
   deploy:
     name: Deploy to GitHub Pages
@@ -57,12 +57,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: webgl-build
-          path: build/WebGL
+          path: WebGLBuild
 
       # Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/WebGL
+          publish_dir: WebGLBuild
           publish_branch: gh-pages
