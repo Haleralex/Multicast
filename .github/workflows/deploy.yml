@@ -2,7 +2,7 @@ name: Build and Deploy Unity WebGL
 on:
   push:
     branches:
-      - UIAdding # Изменили main на UIAdding
+      - UIAdding 
 jobs:
   build:
     name: Build Unity WebGL
