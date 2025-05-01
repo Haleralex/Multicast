@@ -2,19 +2,17 @@ name: Build and Deploy Unity WebGL
 on:
   push:
     branches:
-      - main
+      - UIAdding # Изменили main на UIAdding
 jobs:
   build:
     name: Build Unity WebGL
     runs-on: ubuntu-latest
     steps:
-      # Checkout репозитория
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
 
-      # Кэширование Unity Library для ускорения сборки
       - name: Cache Library
         uses: actions/cache@v4
         with:
@@ -23,24 +21,45 @@ jobs:
           restore-keys: |
             Library-
 
-      # Активация Unity Personal лицензии
       - name: Activate Unity License
         uses: game-ci/unity-activate@v4
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          # Если 2FA включена, раскомментируй следующую строку:
-          # UNITY_TOTP_KEY: ${{ secrets.UNITY_TOTP_KEY }}
 
-      # Сборка проекта
       - name: Build project
         uses: game-ci/unity-builder@v4
         with:
           targetPlatform: WebGL
-          unityVersion: 6000.0.33f1 # Указываем Unity 6.0
+          unityVersion: 6000.0.33f1
           buildPath: WebGLBuild
 
-      # Сохранение артефакта сборки
+      # Отладочный шаг: Показать структуру WebGLBuild
+      - name: Debug WebGLBuild contents
+        run: |
+          echo "Contents of WebGLBuild:"
+          find WebGLBuild -type f
+
+      # Перемещение index.html и связанных файлов в корень
+      - name: Prepare files for deployment
+        run: |
+          if [ -f WebGLBuild/index.html ]; then
+            echo "index.html found in WebGLBuild root"
+          else
+            echo "index.html not found in root, searching in subdirectories..."
+            found=$(find WebGLBuild -name "index.html" -type f)
+            if [ -n "$found" ]; then
+              echo "Found index.html at $found"
+              # Перемещаем все файлы из папки с index.html в корень WebGLBuild
+              mv $(dirname "$found")/* WebGLBuild/
+              # Удаляем пустую подпапку (например, Build), если она осталась
+              find WebGLBuild -type d -empty -delete
+            else
+              echo "Error: index.html not found in WebGLBuild"
+              exit 1
+            fi
+          fi
+
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
@@ -52,14 +71,18 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # Скачивание артефакта сборки
       - name: Download build
         uses: actions/download-artifact@v4
         with:
           name: webgl-build
           path: WebGLBuild
 
-      # Деплой на GitHub Pages
+      # Отладочный шаг: Показать структуру перед деплоем
+      - name: Debug deploy contents
+        run: |
+          echo "Contents of WebGLBuild before deploy:"
+          find WebGLBuild -type f
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
