@@ -20,7 +20,7 @@ public class LevelInitializer : ILevelInitializer
         Dictionary<int, string> missingSlots, GameProgress progress = null
         )
     {
-        foreach (var wordPiece in activeWordPieces)
+        foreach (var wordPiece in activeWordPieces) 
         {
             wordPiecesPool.ReturnWordPiece(wordPiece);
         }

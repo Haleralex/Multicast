@@ -6,7 +6,7 @@ using Zenject;
 
 public class BootstrapInitializer : IInitializable
 {
-    [Inject] private readonly AssetLoader assetLoader;
+    [Inject] private readonly IAssetLoader assetLoader;
     [Inject] private readonly MenuLoader menuLoader;
 
     public void Initialize()

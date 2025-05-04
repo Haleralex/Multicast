@@ -56,7 +56,8 @@ public class LevelModel
 
     public async UniTask<HandledLevelData> GetCurrentLevelData()
     {
-        var levelIndex = progressManager.LoadProgress().CurrentLevel % 4; // Assuming 4 levels for simplicity
+        int levelAmount = await GetLevelAssetsCount();
+        var levelIndex = progressManager.LoadProgress().CurrentLevel % levelAmount;
         var handle = Addressables.LoadAssetAsync<TextAsset>($"LevelData_{levelIndex}");
         TextAsset jsonAsset = await handle.Task;
 
@@ -100,7 +101,27 @@ public class LevelModel
             return null;
         }
     }
+    private async UniTask<int> GetLevelAssetsCount()
+    {
+        try
+        {
+            // Используем метку "LevelData" для поиска всех ассетов уровней
+            var operation = Addressables.LoadResourceLocationsAsync("Game_Level", typeof(TextAsset));
+            await operation.Task;
 
+            int count = operation.Result.Count;
+            Addressables.Release(operation);
+
+            // Если уровней нет, возвращаем 1 для избежания деления на ноль
+            return count > 0 ? count : 1;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Failed to get level assets count: {ex.Message}");
+            // В случае ошибки возвращаем значение по умолчанию 4
+            return 4;
+        }
+    }
     public string GetWordForCompleteLevel()
     {
         var strBuilder = new System.Text.StringBuilder();

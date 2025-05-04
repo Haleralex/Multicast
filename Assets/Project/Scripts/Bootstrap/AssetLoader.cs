@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class AssetLoader
+public class AssetLoader : IAssetLoader
 {
     public event Action LoadingStarted;
     public event Action LoadingCompleted;
