@@ -15,17 +15,21 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: d2d6079eb430c46438a32bd03e1e6774
   m_SerializeEntries:
-  - m_GUID: 1c2e955cf9c09154ca77c7d5816dde35
-    m_Address: LevelData_4
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Game_Level
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1c932a528094af74c814835057863308
     m_Address: LevelData_0
     m_ReadOnly: 0
     m_SerializedLabels:
     - Game_Level
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2d8cfa2c9c805254181020d2ca8ec5ed
+    m_Address: Bootstrap
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 49474c1fd2d6d164bb770cfda334c245
+    m_Address: Scene2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 1a5a43b0afc7b0e48be76731faf2cd37, type: 2}

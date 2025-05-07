@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: CDDGroup
   m_GUID: 9e83ca08a494bdd49b82a85a8fd588fd
   m_SerializeEntries:
+  - m_GUID: 1c2e955cf9c09154ca77c7d5816dde35
+    m_Address: LevelData_4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Game_Level
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 43b29ec56e46e654591d382089d4e751
     m_Address: LevelData_3
     m_ReadOnly: 0

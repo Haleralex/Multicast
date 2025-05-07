@@ -12,5 +12,7 @@ public class BootstrapInstaller : MonoInstaller
         Container.Bind<IAssetLoader>().To<AssetLoader>().AsSingle().NonLazy();
         Container.Bind<MenuLoader>().AsTransient().NonLazy();
         Container.BindInterfacesAndSelfTo<BootstrapInitializer>().AsSingle().NonLazy();
+    
+        Application.targetFrameRate = -1;
     }    
 }
