@@ -18,7 +18,6 @@ public class LevelView : MonoBehaviour, ILevelView
     [SerializeField] private WordSlotsView wordSlotsView;
     [SerializeField] private LevelControlsView levelControlsView;
     [SerializeField] private LevelCompleteMessageView levelCompleteMessageView;
-
     [SerializeField] private GameObject simpleLoadingScreen; 
 
     private void Awake()
@@ -34,6 +33,8 @@ public class LevelView : MonoBehaviour, ILevelView
 
         levelCompleteMessageView.NextLevelPressed += OnNextLevelPressed;
         levelCompleteMessageView.GoToMenuPressed += GoTomenuPressed;
+
+        levelControlsView.GoToMenuPressed += GoTomenuPressed;
     }
 
     
@@ -46,6 +47,8 @@ public class LevelView : MonoBehaviour, ILevelView
 
         levelCompleteMessageView.NextLevelPressed -= OnNextLevelPressed;
         levelCompleteMessageView.GoToMenuPressed -= GoTomenuPressed;
+
+        levelControlsView.GoToMenuPressed -= GoTomenuPressed;
     }
 
     public void SetUIElements(List<WordPieceSlot> slots, List<WordPiece> wordPieces)
