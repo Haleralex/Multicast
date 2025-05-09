@@ -41,6 +41,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7dfae6c0b9b01644eac0532ff7a9da16
+    m_Address: Assets/2D Casual UI/Sprite/GUI2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 1a5a43b0afc7b0e48be76731faf2cd37, type: 2}
   m_SchemaSet:
