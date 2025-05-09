@@ -2,6 +2,7 @@
   <assembly fullname="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="AssetLoadingDisplay" preserve="all" />
     <type fullname="BootstrapInstaller" preserve="all" />
+    <type fullname="CurveText" preserve="all" />
     <type fullname="GameplayInstaller" preserve="all" />
     <type fullname="GameplayStarterInstaller" preserve="all" />
     <type fullname="NavigatorInstaller" preserve="all" />
