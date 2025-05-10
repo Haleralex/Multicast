@@ -1,12 +1,15 @@
 using UnityEngine;
 
-namespace Core{
-
-
-public interface IAudioManager
+namespace Core
 {
-    public void PlayMenuMusic(AudioClip clip);
+    public interface IAudioManager
+    {
+        void PlayBackgroundMusic();
 
-    public void StopMusic();
-}
+        void PlayClip(AudioType audioType);
+
+        void StopBackgroundMusic();
+
+        void SetVolumeValue(float value);
+    }
 }

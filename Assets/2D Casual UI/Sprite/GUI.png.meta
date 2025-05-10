@@ -737,13 +737,13 @@ TextureImporter:
       name: GUI_19
       rect:
         serializedVersion: 2
-        x: 2599
+        x: 2598
         y: 1537
         width: 312
         height: 53
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 40, y: 0, z: 40, w: 0}
+      border: {x: 23, y: 14, z: 21, w: 13}
       customData: 
       outline: []
       physicsShape: []

@@ -8,8 +8,8 @@ using Zenject;
 
 public class ProjectContextInstaller : MonoInstaller<ProjectContextInstaller>
 {
-[SerializeField] private AudioManager audioManagerPrefab;
-    
+    [SerializeField] private AudioManager audioManagerPrefab;
+
     public override void InstallBindings()
     {
         Container.Bind<IProgressManager>().To<ProgressManager>().AsSingle();
@@ -21,5 +21,8 @@ public class ProjectContextInstaller : MonoInstaller<ProjectContextInstaller>
             .FromComponentInNewPrefab(audioManagerPrefab)
             .AsSingle()
             .NonLazy();
+
+        Container.Bind<AudioSettingsConfig>()
+            .FromScriptableObjectResource("AudioSettingsConfig").AsSingle().NonLazy();
     }
 }

@@ -1,50 +1,51 @@
 using System;
+using Core;
 using UnityEngine;
 using Zenject;
 namespace Settings
 {
-public class SettingsPresenter : IDisposable
-{
-    private readonly SettingsView settingsView;
-    private readonly SettingsModel settingsModel;
-    private readonly VolumeSetter volumeSetter;
-    private readonly VibrationSetter vibrationSetter;
-
-    [Inject]
-    public SettingsPresenter(SettingsView settingsView, SettingsModel settingsModel,
-     VolumeSetter volumeSetter, VibrationSetter vibrationSetter)
+    public class SettingsPresenter : IDisposable
     {
-        this.settingsView = settingsView;
-        this.settingsModel = settingsModel;
-        this.volumeSetter = volumeSetter;
-        this.vibrationSetter = vibrationSetter;
+        private readonly SettingsView settingsView;
+        private readonly SettingsModel settingsModel;
+        private readonly IAudioManager volumeSetter;
+        private readonly VibrationSetter vibrationSetter;
 
-        settingsView.SetVolumeSliderValueWithoutNotification(settingsModel.VolumeLevel);
-        settingsView.SetVibrationToggleValueWithoutNotification(settingsModel.VibrationEnabled);
+        [Inject]
+        public SettingsPresenter(SettingsView settingsView, SettingsModel settingsModel,
+         IAudioManager volumeSetter, VibrationSetter vibrationSetter)
+        {
+            this.settingsView = settingsView;
+            this.settingsModel = settingsModel;
+            this.volumeSetter = volumeSetter;
+            this.vibrationSetter = vibrationSetter;
 
-        volumeSetter.SetVolumeValue(settingsModel.VolumeLevel);
-        vibrationSetter.SetVibrationEnabled(settingsModel.VibrationEnabled);
+            settingsView.SetVolumeSliderValueWithoutNotification(settingsModel.VolumeLevel);
+            settingsView.SetVibrationToggleValueWithoutNotification(settingsModel.VibrationEnabled);
 
-        settingsView.VolumeSliderValueChanged += OnVolumeSliderValueChanged;
-        settingsView.VibrationToggleValueChanged += OnVibrationToggleValueChanged;
+            volumeSetter.SetVolumeValue(settingsModel.VolumeLevel);
+            vibrationSetter.SetVibrationEnabled(settingsModel.VibrationEnabled);
+
+            settingsView.VolumeSliderValueChanged += OnVolumeSliderValueChanged;
+            settingsView.VibrationToggleValueChanged += OnVibrationToggleValueChanged;
+        }
+
+        private void OnVibrationToggleValueChanged(bool value)
+        {
+            settingsModel.SetVibrationEnabled(value);
+            vibrationSetter.SetVibrationEnabled(settingsModel.VibrationEnabled);
+        }
+
+        private void OnVolumeSliderValueChanged(float value)
+        {
+            settingsModel.SetVolumeLevel(value);
+            volumeSetter.SetVolumeValue(settingsModel.VolumeLevel);
+        }
+
+        public void Dispose()
+        {
+            settingsView.VolumeSliderValueChanged -= OnVolumeSliderValueChanged;
+            settingsView.VibrationToggleValueChanged -= OnVibrationToggleValueChanged;
+        }
     }
-
-    private void OnVibrationToggleValueChanged(bool value)
-    {
-        settingsModel.SetVibrationEnabled(value);
-        vibrationSetter.SetVibrationEnabled(settingsModel.VibrationEnabled);
-    }
-
-    private void OnVolumeSliderValueChanged(float value)
-    {
-        settingsModel.SetVolumeLevel(value);
-        volumeSetter.SetVolumeValue(settingsModel.VolumeLevel);
-    }
-
-    public void Dispose()
-    {
-        settingsView.VolumeSliderValueChanged -= OnVolumeSliderValueChanged;
-        settingsView.VibrationToggleValueChanged -= OnVibrationToggleValueChanged;
-    }
-}
 }
