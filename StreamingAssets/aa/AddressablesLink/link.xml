@@ -5,6 +5,7 @@
     <type fullname="CurveText" preserve="all" />
     <type fullname="GameplayInstaller" preserve="all" />
     <type fullname="GameplayStarterInstaller" preserve="all" />
+    <type fullname="MenuInstaller" preserve="all" />
     <type fullname="NavigatorInstaller" preserve="all" />
     <type fullname="Settings.SettingsInstaller" preserve="all" />
     <type fullname="StartupConfig" preserve="all" />
