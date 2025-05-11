@@ -124,5 +124,26 @@
 
     </script>
     <script src="https://telegram.org/js/games.js"></script>
+<script>
+    window.onload = function() {
+        if (typeof TelegramGameProxy !== 'undefined') {
+            TelegramGameProxy.init();
+            console.log("Telegram Game API initialized");
+
+            // Проверка инициализации игры
+            TelegramGameProxy.ready();
+
+            // Пример обработки событий (можно расширить)
+            TelegramGameProxy.onEvent('game_ready', function() {
+                console.log("Game is ready");
+            });
+
+            // Отправка очков (опционально)
+            // TelegramGameProxy.shareScore(100); // Замени 100 на текущий счёт
+        } else {
+            console.error("Telegram Game API not available");
+        }
+    };
+</script>
   </body>
 </html>
