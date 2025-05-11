@@ -124,50 +124,5 @@
 
     </script>
     <script src="https://telegram.org/js/games.js"></script>
-<script>
-    // Логирование для отладки
-    console.log("Page loaded, checking Telegram Game API...");
-    
-    // Функция для определения, запущена ли игра в Telegram
-    function isTelegramGameEnvironment() {
-        return typeof TelegramGameProxy !== 'undefined';
-    }
-
-    // Глобальная функция для отправки счета в Telegram
-    function sendScoreToTelegram(score) {
-        if (isTelegramGameEnvironment()) {
-            console.log("Sending score to Telegram:", score);
-            TelegramGameProxy.shareScore(score);
-        } else {
-            console.log("Score update (not in Telegram):", score);
-        }
-    }
-
-    window.onload = function() {
-        console.log("Window loaded");
-        
-        if (isTelegramGameEnvironment()) {
-            console.log("Running inside Telegram WebView");
-            
-            // Сообщаем Telegram, что игра загружена и готова
-            TelegramGameProxy.ready();
-            
-            // Можно добавить обработчики для специфичных событий Telegram
-            console.log("Telegram Game integration ready");
-        } else {
-            console.log("Running in standalone browser mode");
-        }
-    };
-    
-    // Если вы используете Unity, добавьте этот код для взаимодействия с вашей игрой
-    function unityGameLoaded() {
-        console.log("Unity game loaded and ready");
-        if (isTelegramGameEnvironment()) {
-            // Дополнительные действия по интеграции с Unity
-            console.log("Notifying Telegram that Unity game is ready");
-            TelegramGameProxy.ready();
-        }
-    }
-</script>
   </body>
 </html>
