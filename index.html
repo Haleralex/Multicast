@@ -130,18 +130,20 @@
             TelegramGameProxy.init();
             console.log("Telegram Game API initialized");
 
-            // Проверка инициализации игры
+            // Проверка готовности игры (замените на вашу логику)
+            // Когда игра загрузилась и готова к игре
             TelegramGameProxy.ready();
 
-            // Пример обработки событий (можно расширить)
+            // Обработка событий (можно расширить)
             TelegramGameProxy.onEvent('game_ready', function() {
                 console.log("Game is ready");
             });
 
-            // Отправка очков (опционально)
-            // TelegramGameProxy.shareScore(100); // Замени 100 на текущий счёт
+            // Для отправки очков (вызывайте при достижении нового результата)
+            // TelegramGameProxy.shareScore(100);
         } else {
-            console.error("Telegram Game API not available");
+            console.log("Telegram Game API not available - running in standalone mode");
+            // Продолжайте инициализацию игры для запуска вне Telegram
         }
     };
 </script>
