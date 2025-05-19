@@ -1,26 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Implementations;
+using Core.Interfaces;
 using Progress;
 using Unity.VisualScripting;
 using UnityEngine;
 using Utils;
 using Zenject;
 
-public class LevelInitializer : ILevelInitializer
+public class LevelInitializer : ILevelInitializer, IInitializable
 {
-    [Inject] private readonly List<WordPieceSlotsContainer> wordPieceSlotsContainer;
+    [Inject] private readonly WordPieceSlotsContainerPool containerPool; // Заменили фабрику на пул
+
+    /*     [Inject] private readonly IWordPieceSlotsContainerFactory containerFactory;
+     */
+    private List<WordPieceSlotsContainer> wordPieceSlotsContainer = new();
+
     [Inject] private readonly ILevelView levelView;
     [Inject] private readonly LevelModel levelModel;
     [Inject] private readonly WordPiecesPool wordPiecesPool;
     private List<WordPiece> activeWordPieces = new List<WordPiece>();
 
-    public void InitializeLevel(
+    public async void InitializeLevel(
         Dictionary<int, Dictionary<int, string>> correctMapping,
         Dictionary<int, string> missingSlots, GameProgress progress = null
         )
     {
-        foreach (var wordPiece in activeWordPieces) 
+        foreach (var container in wordPieceSlotsContainer)
+        {
+            if (container != null)
+                containerPool.ReturnContainer(container);
+        }
+        wordPieceSlotsContainer.Clear();
+        wordPieceSlotsContainer.Add(await containerPool.GetContainerAsync());
+        wordPieceSlotsContainer.Add(await containerPool.GetContainerAsync());
+        wordPieceSlotsContainer.Add(await containerPool.GetContainerAsync());
+        wordPieceSlotsContainer.Add(await containerPool.GetContainerAsync());
+
+
+
+        foreach (var wordPiece in activeWordPieces)
         {
             wordPiecesPool.ReturnWordPiece(wordPiece);
         }
@@ -44,7 +64,7 @@ public class LevelInitializer : ILevelInitializer
             var missingPieces = strings.Where(a => missingSlots.ContainsKey(a.Key)).ToList();
             foreach (var k in missingPieces)
             {
-                var availableWordPiece = wordPiecesPool.GetWordPiece();
+                var availableWordPiece = await wordPiecesPool.GetWordPieceAsync();
                 availableWordPiece.Initialize(k.Value, k.Key);
                 activeWordPieces.Add(availableWordPiece);
                 wordPieces.Add(availableWordPiece);
@@ -56,5 +76,10 @@ public class LevelInitializer : ILevelInitializer
         {
             levelModel.InitializeFromProgress();
         }
+    }
+
+    public async void Initialize()
+    {
+        await containerPool.Initialize();
     }
 }

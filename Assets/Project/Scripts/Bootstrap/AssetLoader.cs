@@ -49,9 +49,25 @@ public class AssetLoader : IAssetLoader
 
             Addressables.Release(scenesOperation);
 
+            var prefabsOperation = Addressables.DownloadDependenciesAsync("Prefabs");
+
+            while (!prefabsOperation.IsDone)
+            {
+                ProgressChanged?.Invoke(prefabsOperation.PercentComplete);
+                Debug.Log($"Loading progress: {prefabsOperation.PercentComplete * 100}%");
+                await UniTask.Yield();
+            }
+
+            if (prefabsOperation.Status == AsyncOperationStatus.Failed)
+            {
+                Debug.LogError($"Failed to download assets: {prefabsOperation.OperationException}");
+            }
+
+            Addressables.Release(prefabsOperation);
+
             ProgressChanged?.Invoke(1);
 
-            await UniTask.Delay(fakeLoadDelayMilliSeconds); 
+            await UniTask.Delay(fakeLoadDelayMilliSeconds);
 
             LoadingCompleted?.Invoke();
         }

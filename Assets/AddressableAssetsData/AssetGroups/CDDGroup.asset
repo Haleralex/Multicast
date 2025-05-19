@@ -45,6 +45,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - Scenes
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 569e47cb8fc9fcf48893f0ce8d24c2d5
+    m_Address: WordPieceSlotsContainer
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - WordPieceSlotsContainer
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6fa9748f2b847ac429aed7cc70f9519e
+    m_Address: WordPiece
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - WordPiece
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a4e1f6cbd9fd9a54cb949de1e3adca23
     m_Address: Menu
     m_ReadOnly: 0
