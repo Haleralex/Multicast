@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Core.Implementations;
 using Core.Interfaces;
 using UnityEngine;
@@ -12,9 +10,9 @@ public class GameplayInstaller : MonoInstaller<GameplayInstaller>
 
 
     public override void InstallBindings()
-    {
+    {           
         Container.Bind<Transform>()
-            .WithId("WordPiecesContainer")
+            .WithId("WordPiecesContainerParent")
             .FromInstance(wordPiecesParent);
 
         Container.Bind<Transform>()
@@ -22,11 +20,11 @@ public class GameplayInstaller : MonoInstaller<GameplayInstaller>
                 .FromInstance(slotsContainersParent);
 
         Container.Bind<IValidator>().To<Validator>().AsSingle();
-        Container.BindInterfacesAndSelfTo<WordPiecesFactory>().AsSingle();
-        Container.BindInterfacesAndSelfTo<WordPieceSlotsContainerFactory>().AsSingle();
+        Container.BindInterfacesAndSelfTo<WordPiecesFactory>().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<WordPieceSlotsContainerFactory>().AsSingle().NonLazy();
 
-        Container.BindInterfacesAndSelfTo<WordPieceSlotsContainerPool>().AsSingle();
-        Container.BindInterfacesAndSelfTo<WordPiecesPool>().AsSingle();
+        Container.BindInterfacesAndSelfTo<WordPiecesPool>().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<WordPieceSlotsContainerPool>().AsSingle().NonLazy();
 
         Container.Bind<LevelModel>().AsSingle();
         Container.Bind<ILevelView>().To<LevelView>().FromComponentInHierarchy().AsSingle();
@@ -35,9 +33,5 @@ public class GameplayInstaller : MonoInstaller<GameplayInstaller>
         Container.BindInterfacesAndSelfTo<LevelPresenter>().AsSingle().NonLazy();
         Container.Bind<IWordPieceAnimator>().To<WordPieceDOTweenAnimator>().AsSingle();
     }
-
-    private List<WordPieceSlotsContainer> CreateUIWordList(DiContainer context)
-    {
-        return Container.ResolveAll<WordPieceSlotsContainer>().ToList();
-    }
+    
 }

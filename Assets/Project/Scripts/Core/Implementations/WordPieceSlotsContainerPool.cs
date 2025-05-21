@@ -58,15 +58,14 @@ namespace Core.Implementations
             {
                 if (!container.gameObject.activeSelf)
                 {
-                    // Временно без анимации
-                    container.gameObject.SetActive(true);
+                    animator.PlayAppearAnimation(container.gameObject);
                     return container;
                 }
             }
 
             var newContainer = await CreateNewContainerAsync();
             // Временно без анимации
-            newContainer.gameObject.SetActive(true);
+            animator.PlayAppearAnimation(newContainer.gameObject);
             return newContainer;
         }
 
@@ -76,7 +75,7 @@ namespace Core.Implementations
             {
                 container.ResetState();
                 // Временно без анимации
-                container.gameObject.SetActive(false);
+                animator.PlayDisappearAnimation(container.gameObject);
             }
         }
 

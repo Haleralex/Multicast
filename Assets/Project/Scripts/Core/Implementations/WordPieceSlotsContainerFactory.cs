@@ -47,15 +47,12 @@ namespace Core.Implementations
 
         public async UniTask<WordPieceSlotsContainer> CreateAsync()
         {
-            if (!isInitialized)
-                await Initialize();
-
             if (containerPrefab == null)
             {
                 Debug.LogError("WordPieceSlotsContainer prefab is not loaded!");
                 return null;
             }
-            await UniTask.DelayFrame(1); // Ждем один кадр
+
             var container = this.container.InstantiatePrefabForComponent<WordPieceSlotsContainer>(
                     containerPrefab,
                     _parentTransform);
@@ -83,12 +80,25 @@ namespace Core.Implementations
 
         public void Dispose()
         {
+            containerPrefab = null;
+
+            // Освобождаем ресурс Addressables
             if (loadHandle.IsValid())
             {
+                // Принудительное освобождение всех созданных экземпляров
+                Addressables.ReleaseInstance(loadHandle);
+
+                // Для гарантии - освобождаем хендл напрямую
                 Addressables.Release(loadHandle);
+
+                // Обнуляем хендл
+                loadHandle = default;
             }
+
             isInitialized = false;
-            containerPrefab = null;
+
+            // Запрос на выгрузку неиспользуемых ресурсов
+            Resources.UnloadUnusedAssets();
         }
 
         async void IInitializable.Initialize()

@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using Zenject;
 
 public class AssetLoader : IAssetLoader
 {
@@ -10,60 +11,18 @@ public class AssetLoader : IAssetLoader
     public event Action LoadingCompleted;
     public event Action<float> ProgressChanged;
 
+
+
     public async UniTask LoadAssets(int fakeLoadDelayMilliSeconds = 0)
     {
         try
         {
             LoadingStarted?.Invoke();
             Debug.Log($"Loading progress: OnLoadingStarted");
-            var gameLevelOperation = Addressables.DownloadDependenciesAsync("Game_Level");
-
-            while (!gameLevelOperation.IsDone)
-            {
-                ProgressChanged?.Invoke(gameLevelOperation.PercentComplete);
-                Debug.Log($"Loading progress: {gameLevelOperation.PercentComplete * 100}%");
-                await UniTask.Yield();
-            }
-
-            if (gameLevelOperation.Status == AsyncOperationStatus.Failed)
-            {
-                Debug.LogError($"Failed to download assets: {gameLevelOperation.OperationException}");
-            }
-
-            Addressables.Release(gameLevelOperation);
-            Debug.Log($"Loading progress: OnLoadingCompleted");
-
-            var scenesOperation = Addressables.DownloadDependenciesAsync("Scenes");
-
-            while (!scenesOperation.IsDone)
-            {
-                ProgressChanged?.Invoke(scenesOperation.PercentComplete);
-                Debug.Log($"Loading progress: {scenesOperation.PercentComplete * 100}%");
-                await UniTask.Yield();
-            }
-
-            if (scenesOperation.Status == AsyncOperationStatus.Failed)
-            {
-                Debug.LogError($"Failed to download assets: {scenesOperation.OperationException}");
-            }
-
-            Addressables.Release(scenesOperation);
-
-            var prefabsOperation = Addressables.DownloadDependenciesAsync("Prefabs");
-
-            while (!prefabsOperation.IsDone)
-            {
-                ProgressChanged?.Invoke(prefabsOperation.PercentComplete);
-                Debug.Log($"Loading progress: {prefabsOperation.PercentComplete * 100}%");
-                await UniTask.Yield();
-            }
-
-            if (prefabsOperation.Status == AsyncOperationStatus.Failed)
-            {
-                Debug.LogError($"Failed to download assets: {prefabsOperation.OperationException}");
-            }
-
-            Addressables.Release(prefabsOperation);
+            
+            await LoadCategory("Game_Level");
+            await LoadCategory("Scenes");
+            await LoadCategory("Prefabs");
 
             ProgressChanged?.Invoke(1);
 
@@ -75,5 +34,24 @@ public class AssetLoader : IAssetLoader
         {
             Debug.LogException(ex);
         }
+    }
+
+    private async UniTask LoadCategory(string label)
+    {
+        var operation = Addressables.DownloadDependenciesAsync(label);
+        
+        while (!operation.IsDone)
+        {
+            ProgressChanged?.Invoke(operation.PercentComplete);
+            Debug.Log($"Loading {label} progress: {operation.PercentComplete * 100}%");
+            await UniTask.Yield();
+        }
+        
+        if (operation.Status == AsyncOperationStatus.Failed)
+        {
+            Debug.LogError($"Failed to download {label}: {operation.OperationException}");
+        }
+        
+        Addressables.Release(operation);
     }
 }

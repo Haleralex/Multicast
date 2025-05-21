@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Zenject;
-using System.Linq;
+using ZLinq;
 using System.Collections.Generic;
 using Progress;
 using Data;
@@ -127,7 +127,7 @@ public class LevelModel
         var strBuilder = new System.Text.StringBuilder();
         foreach (var k in correctSlotsMapping)
         {
-            foreach (var v in k.Value.Where(v => missingSlotsMapping.ContainsKey(v.Key)))
+            foreach (var v in k.Value.AsValueEnumerable().Where(v => missingSlotsMapping.ContainsKey(v.Key)))
             {
                 strBuilder.Append(v.Value);
             }
@@ -156,11 +156,11 @@ public class LevelModel
             if (wordSlots.ContainsKey(lastAddedSlotId))
             {
                 // Получаем все слоты для этого слова
-                var requiredSlots = wordSlots.Keys.ToList();
+                var requiredSlots = wordSlots.Keys.AsValueEnumerable().ToList();
 
                 // Проверяем, все ли слоты этого слова заполнены
                 bool isComplete = true;
-                foreach (var slotId in requiredSlots.Where(a => missingSlotsMapping.ContainsKey(a)))
+                foreach (var slotId in requiredSlots.AsValueEnumerable().Where(a => missingSlotsMapping.ContainsKey(a)))
                 {
                     // Если хотя бы один слот не заполнен, слово неполное
                     if (!wordPiecesMappings.ContainsValue(slotId))
@@ -175,10 +175,10 @@ public class LevelModel
                 {
                     // Собираем слово из фрагментов в правильном порядке
                     var word = new System.Text.StringBuilder();
-                    foreach (var slot in requiredSlots.OrderBy(s => s))
+                    foreach (var slot in requiredSlots.AsValueEnumerable().OrderBy(s => s))
                     {
                         // Найти wordPieceId который находится в этом слоте
-                        int pieceId = wordPiecesMappings.FirstOrDefault(m => m.Value == slot).Key;
+                        int pieceId = wordPiecesMappings.AsValueEnumerable().FirstOrDefault(m => m.Value == slot).Key;
 
                         // Добавляем фрагмент к слову
                         if (wordSlots.TryGetValue(slot, out string fragment))
@@ -231,7 +231,7 @@ public class LevelModel
             {
                 // Получаем текущее слово, которое могло быть отгадано
                 string currentWord = "";
-                foreach (var slot in wordSlots.Keys.OrderBy(s => s))
+                foreach (var slot in wordSlots.Keys.AsValueEnumerable().OrderBy(s => s))
                 {
                     if (wordSlots.TryGetValue(slot, out string fragment))
                     {
@@ -268,19 +268,5 @@ public class LevelModel
         wordPiecesMappings = new Dictionary<int, int>(progress.WordPiecesMapping);
         guessedWords = new List<string>(progress.GuessedWords);
         WordPiecesMappingChanged?.Invoke(MappingUpdate.InitializeAll());
-    }
-}
-
-
-public class HandledLevelData
-{
-    public Dictionary<int, Dictionary<int, string>> CorrectSlotsMapping { get; private set; }
-    public Dictionary<int, string> MissingSlotsMapping { get; private set; }
-
-    public HandledLevelData(Dictionary<int, Dictionary<int, string>> correctSlotsMapping,
-        Dictionary<int, string> missingSlotsMapping)
-    {
-        CorrectSlotsMapping = correctSlotsMapping;
-        MissingSlotsMapping = missingSlotsMapping;
     }
 }

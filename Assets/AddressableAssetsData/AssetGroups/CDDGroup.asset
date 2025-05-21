@@ -49,12 +49,14 @@ MonoBehaviour:
     m_Address: WordPieceSlotsContainer
     m_ReadOnly: 0
     m_SerializedLabels:
+    - Prefabs
     - WordPieceSlotsContainer
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6fa9748f2b847ac429aed7cc70f9519e
     m_Address: WordPiece
     m_ReadOnly: 0
     m_SerializedLabels:
+    - Prefabs
     - WordPiece
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a4e1f6cbd9fd9a54cb949de1e3adca23

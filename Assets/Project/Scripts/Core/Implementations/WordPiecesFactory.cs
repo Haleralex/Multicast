@@ -19,9 +19,9 @@ namespace Core.Implementations
         private readonly Transform _parentTransform;
 
         [Inject]
-        public WordPiecesFactory(DiContainer container, [Inject(Id = "WordPiecesContainer")] Transform parent = null)
+        public WordPiecesFactory(DiContainer container, [Inject(Id = "WordPiecesContainerParent")] Transform parent = null)
         {
-            this._container = container;
+            _container = container;
             _parentTransform = parent;
         }
 
@@ -30,25 +30,30 @@ namespace Core.Implementations
             if (isInitialized)
                 return;
 
-            loadHandle = Addressables.LoadAssetAsync<GameObject>(wordPieceAssetKey);
-            await loadHandle.Task;
+            try
+            {
+                loadHandle = Addressables.LoadAssetAsync<GameObject>(wordPieceAssetKey);
+                await loadHandle.Task;
 
-            if (loadHandle.Status == AsyncOperationStatus.Succeeded)
-            {
-                wordPiecePrefab = loadHandle.Result;
-                isInitialized = true;
+                if (loadHandle.Status == AsyncOperationStatus.Succeeded)
+                {
+                    wordPiecePrefab = loadHandle.Result;
+                    isInitialized = true;
+                }
+                else
+                {
+                    Debug.LogError($"Failed to load WordPiece prefab with key: {wordPieceAssetKey}");
+                }
             }
-            else
+            catch (Exception e)
             {
-                Debug.LogError($"Failed to load WordPiece prefab with key: {wordPieceAssetKey}");
+                Debug.LogError($"Exception during WordPiece loading: {e.Message}");
+                // Можно добавить повторную попытку или уведомление системы
             }
         }
 
         public async UniTask<WordPiece> CreateAsync()
         {
-            if (!isInitialized)
-                await Initialize();
-
             if (wordPiecePrefab == null)
             {
                 Debug.LogError("WordPiece prefab is not loaded!");
@@ -62,17 +67,33 @@ namespace Core.Implementations
         // Важно освободить ресурсы Addressables при уничтожении фабрики
         public void Dispose()
         {
+            Debug.Log("Disposing WordPiecesFactory");
+
+            // Обнуляем ссылку
+            wordPiecePrefab = null;
+
+            // Освобождаем ресурс Addressables
             if (loadHandle.IsValid())
             {
+                // Принудительное освобождение всех созданных экземпляров
+                Addressables.ReleaseInstance(loadHandle);
+
+                // Для гарантии - освобождаем хендл напрямую
                 Addressables.Release(loadHandle);
+
+                // Обнуляем хендл
+                loadHandle = default;
             }
+
             isInitialized = false;
-            wordPiecePrefab = null;
+
+            // Запрос на выгрузку неиспользуемых ресурсов
+            Resources.UnloadUnusedAssets();
         }
 
         async void IInitializable.Initialize()
         {
-            await Initialize(); 
+            /* await Initialize(); */
         }
     }
 }

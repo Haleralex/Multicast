@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using ZLinq;
 using Core.Implementations;
-using Core.Interfaces;
 using Progress;
-using Unity.VisualScripting;
-using UnityEngine;
 using Utils;
 using Zenject;
+using Core.Interfaces;
+using System.Linq;
+using Cysharp.Threading.Tasks;
+using Unity.Android.Gradle.Manifest;
+using UnityEngine.UI;
+using UnityEngine;
 
 public class LevelInitializer : ILevelInitializer, IInitializable
 {
@@ -20,6 +23,9 @@ public class LevelInitializer : ILevelInitializer, IInitializable
     [Inject] private readonly ILevelView levelView;
     [Inject] private readonly LevelModel levelModel;
     [Inject] private readonly WordPiecesPool wordPiecesPool;
+
+    [Inject] private readonly IWordPieceAnimator animator;
+
     private List<WordPiece> activeWordPieces = new List<WordPiece>();
 
     public async void InitializeLevel(
@@ -52,16 +58,17 @@ public class LevelInitializer : ILevelInitializer, IInitializable
         {
             wordPieceSlotsContainer[wordIndex]
                 .Initialize(correctMapping[correctMap.Key], missingSlots);
-            wordPieceSlots.AddRange(wordPieceSlotsContainer[wordIndex].ActiveWordPieceSlots.ToList());
+            wordPieceSlots.AddRange(wordPieceSlotsContainer[wordIndex].ActiveWordPieceSlots.AsValueEnumerable().ToList());
             wordIndex++;
         }
-        var shuffledMap = correctMapping.Values.ToList();
+        var shuffledMap = correctMapping.Values.AsValueEnumerable().ToList();
         shuffledMap.ShuffleUnity();
+        
         foreach (var correctMap in shuffledMap)
         {
-            var strings = correctMap.ToList();
+            var strings = correctMap.AsValueEnumerable().ToList();
             strings.Shuffle();
-            var missingPieces = strings.Where(a => missingSlots.ContainsKey(a.Key)).ToList();
+            var missingPieces = strings.AsValueEnumerable().Where(a => missingSlots.ContainsKey(a.Key)).ToList();
             foreach (var k in missingPieces)
             {
                 var availableWordPiece = await wordPiecesPool.GetWordPieceAsync();
@@ -71,7 +78,7 @@ public class LevelInitializer : ILevelInitializer, IInitializable
             }
         }
         levelView.SetUIElements(wordPieceSlots, wordPieces);
-
+        animator.PlaySequentialAppearAnimation(wordPieces.Select(a => a.gameObject).ToList(), 0.025f);
         if (progress != null && progress.WordPiecesMapping.Count > 0)
         {
             levelModel.InitializeFromProgress();

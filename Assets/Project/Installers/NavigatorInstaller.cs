@@ -3,7 +3,7 @@ using Zenject;
 using UISystem;
 using Navigation;
 using System.Collections.Generic;
-using System.Linq;
+using ZLinq;
 
 public class NavigatorInstaller : MonoInstaller
 {
@@ -30,7 +30,7 @@ public class NavigatorInstaller : MonoInstaller
 
     private List<UIPanel> CreateUIPanelList(DiContainer context)
     {
-        return Container.ResolveAll<UIPanel>().ToList();
+        return Container.ResolveAll<UIPanel>().AsValueEnumerable().ToList();
     }
 
     public override void Start()

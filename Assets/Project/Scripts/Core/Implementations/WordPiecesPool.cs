@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Core.Implementations;
 using Core.Interfaces;
@@ -5,20 +6,18 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
-public class WordPiecesPool : IInitializable
+public class WordPiecesPool : IInitializable, IDisposable
 {
     private readonly IWordPiecesFactory wordPiecesFactory;
-    private readonly IWordPieceAnimator animator;
     private int initialPoolSize = 12;
     private bool isInitialized = false;
 
     private List<WordPiece> pooledPieces = new();
 
     [Inject]
-    public WordPiecesPool(IWordPiecesFactory factory, IWordPieceAnimator animator)
+    public WordPiecesPool(IWordPiecesFactory factory)
     {
         this.wordPiecesFactory = factory;
-        this.animator = animator;
     }
 
     public async UniTask Initialize()
@@ -48,25 +47,17 @@ public class WordPiecesPool : IInitializable
 
     public async UniTask<WordPiece> GetWordPieceAsync()
     {
-        while (!isInitialized)
-        {
-            await UniTask.Yield();
-        }
-
-        if (!isInitialized)
-            await Initialize();
-
         foreach (var piece in pooledPieces)
         {
             if (!piece.gameObject.activeSelf)
             {
-                animator.PlayAppearAnimation(piece.gameObject);
+                piece.gameObject.SetActive(true);
                 return piece;
             }
         }
 
         var newPiece = await CreateNewWordPieceAsync();
-        animator.PlayAppearAnimation(newPiece.gameObject);
+        newPiece.gameObject.SetActive(true);
         return newPiece;
     }
 
@@ -74,12 +65,17 @@ public class WordPiecesPool : IInitializable
     {
         if (piece != null)
         {
-            animator.PlayDisappearAnimation(piece.gameObject);
+            piece.gameObject.SetActive(false);
         }
     }
 
     async void IInitializable.Initialize()
     {
         await Initialize();
+    }
+
+    public void Dispose()
+    {
+        pooledPieces.Clear();
     }
 }

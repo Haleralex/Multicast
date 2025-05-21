@@ -8,7 +8,7 @@ namespace Core.Implementations
 {
     public class WordPieceDOTweenAnimator : IWordPieceAnimator
     {
-        private readonly float appearDuration = 0.3f;
+        private readonly float appearDuration = 0.1f;
         private readonly float disappearDuration = 0.2f;
 
         public void PlayAppearAnimation(GameObject target)
@@ -42,7 +42,7 @@ namespace Core.Implementations
             // Сначала сбрасываем все состояния
             foreach (var target in targets)
             {
-                target.transform.localScale = Vector3.zero;
+                target.transform.GetChild(1).localScale = Vector3.zero;
                 target.SetActive(true);
             }
 
@@ -60,7 +60,7 @@ namespace Core.Implementations
                 }
 
                 // Анимируем элемент в последовательности
-                sequence.Append(target.transform.DOScale(Vector3.one, appearDuration)
+                sequence.Append(target.transform.GetChild(1).DOScale(Vector3.one, appearDuration)
                     .SetEase(Ease.OutBack));
             }
 

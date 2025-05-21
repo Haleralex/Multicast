@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: d2d6079eb430c46438a32bd03e1e6774
   m_currentHash:
     serializedVersion: 2
-    Hash: 00000000000000000000000000000000
+    Hash: 5fe4d1714550124987ca9000d871a211
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 1
   m_CatalogRequestsTimeout: 0
@@ -128,6 +128,7 @@ MonoBehaviour:
     - Scenes
     - WordPiece
     - WordPieceSlotsContainer
+    - Prefabs
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 3eee36ed9812a434799af601dc49f51a, type: 2}
@@ -140,7 +141,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cc3e4067ad21a414c9f2be7ab0cd2ae2, type: 2}
   - {fileID: 11400000, guid: 7a72277982469884e9a7b8f1e1105b12, type: 2}
   - {fileID: 11400000, guid: 8a56692076a0cb946bc7ee529f56667e, type: 2}
-  m_ActiveProfileId: 53b2d6ab09355c64eaa6e040962d730d
+  m_ActiveProfileId: 963fad36e7069e64184d9eee27b6e692
   m_CcdManagedData:
     EnvironmentId: 6cb3b5b2-dda1-4064-88a0-f10256cf7f88
     EnvironmentName: production
