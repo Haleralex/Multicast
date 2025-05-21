@@ -79,7 +79,8 @@ namespace Core.Implementations
                 Addressables.ReleaseInstance(loadHandle);
 
                 // Для гарантии - освобождаем хендл напрямую
-                Addressables.Release(loadHandle);
+                if(loadHandle.IsValid())
+                    Addressables.Release(loadHandle);
 
                 // Обнуляем хендл
                 loadHandle = default;
