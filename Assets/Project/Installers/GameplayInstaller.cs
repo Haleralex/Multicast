@@ -10,7 +10,7 @@ public class GameplayInstaller : MonoInstaller<GameplayInstaller>
 
 
     public override void InstallBindings()
-    {           
+    {
         Container.Bind<Transform>()
             .WithId("WordPiecesContainerParent")
             .FromInstance(wordPiecesParent);
@@ -26,6 +26,13 @@ public class GameplayInstaller : MonoInstaller<GameplayInstaller>
         Container.BindInterfacesAndSelfTo<WordPiecesPool>().AsSingle().NonLazy();
         Container.BindInterfacesAndSelfTo<WordPieceSlotsContainerPool>().AsSingle().NonLazy();
 
+        // Добавляем недостающие сервисы
+        Container.Bind<IWordPieceSlotsService>().To<WordPieceSlotsService>().AsSingle();
+        Container.Bind<IWordPiecesService>().To<WordPiecesService>().AsSingle();
+        Container.Bind<ILevelAnimationService>().To<LevelAnimationService>().AsSingle();
+        Container.Bind<IProgressRestoreService>().To<ProgressRestoreService>().AsSingle();
+
+        Container.Bind<ILevelDataLoader>().To<LevelDataLoader>().AsSingle();
         Container.Bind<LevelModel>().AsSingle();
         Container.Bind<ILevelView>().To<LevelView>().FromComponentInHierarchy().AsSingle();
         Container.Bind<ILevelInitializer>().To<LevelInitializer>().AsSingle().NonLazy();
@@ -33,5 +40,5 @@ public class GameplayInstaller : MonoInstaller<GameplayInstaller>
         Container.BindInterfacesAndSelfTo<LevelPresenter>().AsSingle().NonLazy();
         Container.Bind<IWordPieceAnimator>().To<WordPieceDOTweenAnimator>().AsSingle();
     }
-    
+
 }

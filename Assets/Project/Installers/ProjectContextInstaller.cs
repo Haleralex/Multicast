@@ -4,11 +4,12 @@ using Core;
 using Progress;
 using Settings;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using Zenject;
 
 public class ProjectContextInstaller : MonoInstaller<ProjectContextInstaller>
 {
-    [SerializeField] private AudioManager audioManagerPrefab;
+    
 
     public override void InstallBindings()
     {
@@ -17,12 +18,6 @@ public class ProjectContextInstaller : MonoInstaller<ProjectContextInstaller>
 
         Container.Bind<SettingsModel>().AsSingle();
 
-        Container.Bind<IAudioManager>().To<AudioManager>()
-            .FromComponentInNewPrefab(audioManagerPrefab)
-            .AsSingle()
-            .NonLazy();
-
-        Container.Bind<AudioSettingsConfig>()
-            .FromScriptableObjectResource("AudioSettingsConfig").AsSingle().NonLazy();
+        
     }
 }

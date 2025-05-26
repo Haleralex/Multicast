@@ -6,10 +6,10 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
-public class WordPiecesPool : IInitializable, IDisposable
+public class WordPiecesPool : IDisposable
 {
     private readonly IWordPiecesFactory wordPiecesFactory;
-    private int initialPoolSize = 12;
+    private int initialPoolSize = 6;
     private bool isInitialized = false;
 
     private List<WordPiece> pooledPieces = new();
@@ -23,29 +23,45 @@ public class WordPiecesPool : IInitializable, IDisposable
     public async UniTask Initialize()
     {
         if (isInitialized)
+        {
+            Debug.LogError("WordPiecesPool is already initialized.");
             return;
-
+        }
         await wordPiecesFactory.Initialize();
-
         for (int i = 0; i < initialPoolSize; i++)
         {
-            await CreateNewWordPieceAsync();
+            pooledPieces.Add(CreateNewWordPieceAsync());
         }
 
         isInitialized = true;
     }
-    private async UniTask<WordPiece> CreateNewWordPieceAsync()
+    private WordPiece CreateNewWordPieceAsync()
     {
-        var wordPiece = await wordPiecesFactory.CreateAsync();
-        if (wordPiece != null)
-        {
-            wordPiece.gameObject.SetActive(false);
-            pooledPieces.Add(wordPiece);
-        }
+        var wordPiece = wordPiecesFactory.Create();
+        CreationCallback(wordPiece);
         return wordPiece;
     }
 
-    public async UniTask<WordPiece> GetWordPieceAsync()
+    private void CreationCallback(WordPiece wordPiece)
+    {
+        if(wordPiece == null)
+        {
+            Debug.LogError("WordPiece is null after creation.");
+            return;
+        }
+        wordPiece.gameObject.SetActive(false);
+    }
+    private void GettingCallback(WordPiece wordPiece)
+    {
+        if(wordPiece == null)
+        {
+            Debug.LogError("WordPiece is null.");
+            return;
+        }
+        wordPiece.gameObject.SetActive(true);
+    }
+
+    public WordPiece GetWordPiece()
     {
         foreach (var piece in pooledPieces)
         {
@@ -56,8 +72,8 @@ public class WordPiecesPool : IInitializable, IDisposable
             }
         }
 
-        var newPiece = await CreateNewWordPieceAsync();
-        newPiece.gameObject.SetActive(true);
+        var newPiece = CreateNewWordPieceAsync();
+        GettingCallback(newPiece);
         return newPiece;
     }
 
@@ -67,11 +83,6 @@ public class WordPiecesPool : IInitializable, IDisposable
         {
             piece.gameObject.SetActive(false);
         }
-    }
-
-    async void IInitializable.Initialize()
-    {
-        await Initialize();
     }
 
     public void Dispose()

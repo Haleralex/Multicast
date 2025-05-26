@@ -15,11 +15,29 @@ MonoBehaviour:
   m_GroupName: CDDGroup
   m_GUID: 9e83ca08a494bdd49b82a85a8fd588fd
   m_SerializeEntries:
+  - m_GUID: 02ab79ab8a83e8349b0a42d0a9076d80
+    m_Address: MokMenuAudio
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Audio
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 13f6fc59c1b48a84a8f71c79ec4fc136
+    m_Address: tap-a
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Audio
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1c2e955cf9c09154ca77c7d5816dde35
     m_Address: LevelData_4
     m_ReadOnly: 0
     m_SerializedLabels:
     - Game_Level
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 20df5735afcfc944d90422788c302c75
+    m_Address: AudioSettingsConfig
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Audio
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 43b29ec56e46e654591d382089d4e751
     m_Address: LevelData_3
@@ -59,11 +77,22 @@ MonoBehaviour:
     - Prefabs
     - WordPiece
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e31459513985e44f995f18fa0c72e15
+    m_Address: AudioManager
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Audio
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a4e1f6cbd9fd9a54cb949de1e3adca23
     m_Address: Menu
     m_ReadOnly: 0
     m_SerializedLabels:
     - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d4525e4f3f449e1419ffe25c9011534f
+    m_Address: AnimationsConfig
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 1a5a43b0afc7b0e48be76731faf2cd37, type: 2}

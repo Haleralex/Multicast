@@ -6,66 +6,61 @@ using Zenject;
 
 namespace Core.Implementations
 {
-    public class WordPieceSlotsContainerPool : IInitializable
+    public class WordPieceSlotsContainerPool
     {
         private readonly IWordPieceSlotsContainerFactory containerFactory;
-        private readonly IWordPieceAnimator animator;
         private int initialPoolSize = 4;
         private bool isInitialized = false;
 
         private List<WordPieceSlotsContainer> pooledContainers = new();
 
         [Inject]
-        public WordPieceSlotsContainerPool(IWordPieceSlotsContainerFactory factory,
-            IWordPieceAnimator animator)
+        public WordPieceSlotsContainerPool(IWordPieceSlotsContainerFactory factory)
         {
             this.containerFactory = factory;
-            this.animator = animator;
         }
 
         public async UniTask Initialize()
         {
             if (isInitialized)
+            {
+                Debug.LogError("WordPieceSlotsContainerPool is already initialized.");
                 return;
+            }
 
             await containerFactory.Initialize();
 
             for (int i = 0; i < initialPoolSize; i++)
             {
-                await CreateNewContainerAsync();
+                pooledContainers.Add(CreateNewContainerAsync());
             }
 
             isInitialized = true;
         }
 
-        private async UniTask<WordPieceSlotsContainer> CreateNewContainerAsync()
+        private WordPieceSlotsContainer CreateNewContainerAsync()
         {
-            var container = await containerFactory.CreateAsync();
+            var container = containerFactory.Create();
             if (container != null)
             {
                 container.gameObject.SetActive(false);
-                pooledContainers.Add(container);
             }
             return container;
         }
 
-        public async UniTask<WordPieceSlotsContainer> GetContainerAsync()
+        public WordPieceSlotsContainer GetContainerAsync()
         {
-            while (!isInitialized)
-                await UniTask.Yield();
-
             foreach (var container in pooledContainers)
             {
                 if (!container.gameObject.activeSelf)
                 {
-                    animator.PlayAppearAnimation(container.gameObject);
+                    container.gameObject.SetActive(true);
                     return container;
                 }
             }
 
-            var newContainer = await CreateNewContainerAsync();
-            // Временно без анимации
-            animator.PlayAppearAnimation(newContainer.gameObject);
+            var newContainer = CreateNewContainerAsync();
+            newContainer.gameObject.SetActive(true);
             return newContainer;
         }
 
@@ -74,14 +69,13 @@ namespace Core.Implementations
             if (container != null)
             {
                 container.ResetState();
-                // Временно без анимации
-                animator.PlayDisappearAnimation(container.gameObject);
+                container.gameObject.SetActive(false);
             }
         }
 
-        async void IInitializable.Initialize()
+        public void ClearPool()
         {
-            await Initialize();
+            isInitialized = false;
         }
     }
 }

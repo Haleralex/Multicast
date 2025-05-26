@@ -9,7 +9,7 @@ using Zenject;
 
 namespace Core.Implementations
 {
-    public class WordPieceSlotsContainerFactory : IWordPieceSlotsContainerFactory, IInitializable, IDisposable
+    public class WordPieceSlotsContainerFactory : IWordPieceSlotsContainerFactory
     {
         private readonly DiContainer container;
         private readonly string containerAssetKey = "WordPieceSlotsContainer"; // ключ для Addressables
@@ -29,10 +29,13 @@ namespace Core.Implementations
         public async UniTask Initialize()
         {
             if (isInitialized)
+            {
+                Debug.LogError("WordPieceSlotsContainerFactory is already initialized.");
                 return;
+            }
 
             loadHandle = Addressables.LoadAssetAsync<GameObject>(containerAssetKey);
-            await loadHandle.Task;
+            await loadHandle.ToUniTask();
 
             if (loadHandle.Status == AsyncOperationStatus.Succeeded)
             {
@@ -45,7 +48,7 @@ namespace Core.Implementations
             }
         }
 
-        public async UniTask<WordPieceSlotsContainer> CreateAsync()
+        public WordPieceSlotsContainer Create()
         {
             if (containerPrefab == null)
             {
@@ -57,15 +60,6 @@ namespace Core.Implementations
                     containerPrefab,
                     _parentTransform);
 
-            // Принудительное обновление LayoutGroup после добавления
-
-            if (_parentTransform != null && _parentTransform.TryGetComponent<LayoutGroup>(out var layoutGroup))
-            {
-                // Форсируем перестроение Layout
-                LayoutRebuilder.ForceRebuildLayoutImmediate(_parentTransform as RectTransform);
-            }
-
-            // Убедитесь, что RectTransform контейнера настроен правильно
             if (container.TryGetComponent<RectTransform>(out var rectTransform))
             {
                 rectTransform.anchorMin = new Vector2(0, 0);
@@ -82,28 +76,18 @@ namespace Core.Implementations
         {
             containerPrefab = null;
 
-            // Освобождаем ресурс Addressables
             if (loadHandle.IsValid())
             {
-                // Принудительное освобождение всех созданных экземпляров
                 Addressables.ReleaseInstance(loadHandle);
-
-                // Для гарантии - освобождаем хендл напрямую
+                if(loadHandle.IsValid())
                 Addressables.Release(loadHandle);
 
-                // Обнуляем хендл
                 loadHandle = default;
             }
 
             isInitialized = false;
 
-            // Запрос на выгрузку неиспользуемых ресурсов
             Resources.UnloadUnusedAssets();
-        }
-
-        async void IInitializable.Initialize()
-        {
-            await Initialize();
         }
     }
 }

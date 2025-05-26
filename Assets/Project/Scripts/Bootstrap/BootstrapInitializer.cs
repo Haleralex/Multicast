@@ -18,7 +18,7 @@ public class BootstrapInitializer : IInitializable
     {
         try
         {
-            await assetLoader.LoadAssets(300);
+            await assetLoader.LoadAssets();
             menuLoader.LoadMenu();
         }
         catch (System.Exception ex)

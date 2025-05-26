@@ -11,6 +11,7 @@ using Data;
 public class LevelModel
 {
     private readonly IProgressManager progressManager;
+    private readonly ILevelDataLoader levelDataLoader;
 
     private Dictionary<int, int> wordPiecesMappings = new();
     public IReadOnlyDictionary<int, int> WordPiecesMappings => wordPiecesMappings;
@@ -23,9 +24,10 @@ public class LevelModel
     public IReadOnlyList<string> GuessedWords => guessedWords;
 
     [Inject]
-    public LevelModel(IProgressManager progressManager)
+    public LevelModel(IProgressManager progressManager, ILevelDataLoader levelDataLoader)
     {
         this.progressManager = progressManager;
+        this.levelDataLoader = levelDataLoader;
     }
 
     public GameProgress GetCurrentProgress()
@@ -56,71 +58,16 @@ public class LevelModel
 
     public async UniTask<HandledLevelData> GetCurrentLevelData()
     {
-        int levelAmount = await GetLevelAssetsCount();
-        var levelIndex = progressManager.LoadProgress().CurrentLevel % levelAmount;
-        var handle = Addressables.LoadAssetAsync<TextAsset>($"LevelData_{levelIndex}");
-        TextAsset jsonAsset = await handle.Task;
+        var handledLevelData = await levelDataLoader.LoadCurrentLevelDataAsync();
 
-        if (jsonAsset == null)
+        if (handledLevelData != null)
         {
-            Debug.LogError($"Failed to load LevelData JSON for level {levelIndex}");
-            return null;
-        }
-
-        try
-        {
-            LevelData levelData = JsonConvert.DeserializeObject<LevelData>(jsonAsset.text);
-            correctSlotsMapping.Clear();
-            missingSlotsMapping.Clear();
+            correctSlotsMapping = new Dictionary<int, Dictionary<int, string>>(handledLevelData.CorrectSlotsMapping);
+            missingSlotsMapping = new Dictionary<int, string>(handledLevelData.MissingSlotsMapping);
             guessedWords.Clear();
-            var fullWordIndex = 0;
-            var baseIndex = 0;
-            foreach (var word in levelData.Words)
-            {
-                correctSlotsMapping[fullWordIndex] = new Dictionary<int, string>();
-                for (int i = 0; i < word.Clusters.Count; i++)
-                {
-                    correctSlotsMapping[fullWordIndex].Add(baseIndex + i, word.Clusters[i]);
-
-                    if (word.MissingClusters.Contains(i))
-                    {
-                        missingSlotsMapping.Add(baseIndex + i, word.Clusters[i]);
-                    }
-                }
-                fullWordIndex++;
-                baseIndex += word.Clusters.Count;
-            }
-
-            Addressables.Release(handle);
-            var handledLevelData = new HandledLevelData(correctSlotsMapping, missingSlotsMapping);
-            return handledLevelData;
         }
-        catch (System.Exception ex)
-        {
-            Debug.LogError($"Failed to deserialize LevelData JSON for level {levelIndex}: {ex.Message}");
-            return null;
-        }
-    }
-    private async UniTask<int> GetLevelAssetsCount()
-    {
-        try
-        {
-            // Используем метку "LevelData" для поиска всех ассетов уровней
-            var operation = Addressables.LoadResourceLocationsAsync("Game_Level", typeof(TextAsset));
-            await operation.Task;
 
-            int count = operation.Result.Count;
-            Addressables.Release(operation);
-
-            // Если уровней нет, возвращаем 1 для избежания деления на ноль
-            return count > 0 ? count : 1;
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Failed to get level assets count: {ex.Message}");
-            // В случае ошибки возвращаем значение по умолчанию 4
-            return 4;
-        }
+        return handledLevelData;
     }
     public string GetWordForCompleteLevel()
     {
@@ -146,23 +93,19 @@ public class LevelModel
 
     private void CheckForCompletedWord(int lastAddedSlotId)
     {
-        // Определяем, к какому слову относится этот слот
         foreach (var wordEntry in correctSlotsMapping)
         {
             int wordIndex = wordEntry.Key;
             var wordSlots = wordEntry.Value;
 
-            // Проверяем, относится ли слот к текущему слову
             if (wordSlots.ContainsKey(lastAddedSlotId))
             {
                 // Получаем все слоты для этого слова
                 var requiredSlots = wordSlots.Keys.AsValueEnumerable().ToList();
 
-                // Проверяем, все ли слоты этого слова заполнены
                 bool isComplete = true;
                 foreach (var slotId in requiredSlots.AsValueEnumerable().Where(a => missingSlotsMapping.ContainsKey(a)))
                 {
-                    // Если хотя бы один слот не заполнен, слово неполное
                     if (!wordPiecesMappings.ContainsValue(slotId))
                     {
                         isComplete = false;
@@ -170,17 +113,13 @@ public class LevelModel
                     }
                 }
 
-                // Если все слоты заполнены, собираем и добавляем слово
                 if (isComplete)
                 {
-                    // Собираем слово из фрагментов в правильном порядке
                     var word = new System.Text.StringBuilder();
                     foreach (var slot in requiredSlots.AsValueEnumerable().OrderBy(s => s))
                     {
-                        // Найти wordPieceId который находится в этом слоте
                         int pieceId = wordPiecesMappings.AsValueEnumerable().FirstOrDefault(m => m.Value == slot).Key;
 
-                        // Добавляем фрагмент к слову
                         if (wordSlots.TryGetValue(slot, out string fragment))
                         {
                             word.Append(fragment);
@@ -189,7 +128,6 @@ public class LevelModel
 
                     string completedWord = word.ToString();
 
-                    // Проверяем, не было ли слово уже отгадано
                     if (!guessedWords.Contains(completedWord))
                     {
                         guessedWords.Add(completedWord);
@@ -207,29 +145,23 @@ public class LevelModel
     {
         if (wordPiecesMappings.TryGetValue(wordPieceId, out var slotId))
         {
-            // Удаляем маппинг
             wordPiecesMappings.Remove(wordPieceId);
             WordPiecesMappingChanged?.Invoke(MappingUpdate.Remove(wordPieceId));
 
-            // Проверяем, какое слово было нарушено этим удалением
             CheckForBrokenWords(slotId);
         }
     }
     private void CheckForBrokenWords(int removedSlotId)
     {
-        // Создаем список слов, которые нужно удалить из отгаданных
         List<string> wordsToRemove = new List<string>();
 
-        // Проверяем, к какому слову относился удаленный слот
         foreach (var wordEntry in correctSlotsMapping)
         {
             int wordIndex = wordEntry.Key;
             var wordSlots = wordEntry.Value;
 
-            // Если слот относился к этому слову
             if (wordSlots.ContainsKey(removedSlotId) && wordSlots.ContainsKey(removedSlotId))
             {
-                // Получаем текущее слово, которое могло быть отгадано
                 string currentWord = "";
                 foreach (var slot in wordSlots.Keys.AsValueEnumerable().OrderBy(s => s))
                 {
@@ -239,7 +171,6 @@ public class LevelModel
                     }
                 }
 
-                // Проверяем, было ли это слово в списке отгаданных
                 if (guessedWords.Contains(currentWord))
                 {
                     wordsToRemove.Add(currentWord);
@@ -248,11 +179,11 @@ public class LevelModel
             }
         }
 
-        // Удаляем нарушенные слова из списка отгаданных
         foreach (var wordToRemove in wordsToRemove)
         {
             guessedWords.Remove(wordToRemove);
         }
+
         SaveGuessedWords();
     }
     public void ResetWordPieceMappings()
@@ -268,5 +199,10 @@ public class LevelModel
         wordPiecesMappings = new Dictionary<int, int>(progress.WordPiecesMapping);
         guessedWords = new List<string>(progress.GuessedWords);
         WordPiecesMappingChanged?.Invoke(MappingUpdate.InitializeAll());
+    }
+    
+    public bool IsLevelFull()
+    {
+        return guessedWords.Count == correctSlotsMapping.Count;
     }
 }

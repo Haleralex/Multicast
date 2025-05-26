@@ -8,6 +8,6 @@ namespace Core.Interfaces
     {
         void PlayAppearAnimation(GameObject target);
         void PlayDisappearAnimation(GameObject target, Action onComplete = null);
-        void PlaySequentialAppearAnimation(List<GameObject> activeSlots, float slotAnimationDelay);
+        void PlaySequentialAppearAnimation(List<GameObject> activeSlots);
     }
 }

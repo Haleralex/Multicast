@@ -1,92 +1,59 @@
-using System.Collections;
 using System.Collections.Generic;
 using ZLinq;
 using Core.Implementations;
 using Progress;
 using Utils;
-using Zenject;
 using Core.Interfaces;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using Unity.Android.Gradle.Manifest;
-using UnityEngine.UI;
-using UnityEngine;
 
-public class LevelInitializer : ILevelInitializer, IInitializable
+public class LevelInitializer : ILevelInitializer
 {
-    [Inject] private readonly WordPieceSlotsContainerPool containerPool; // Заменили фабрику на пул
+    private readonly ILevelView _levelView;
+    private readonly IWordPieceSlotsService _slotsService;
+    private readonly IWordPiecesService _wordPiecesService;
+    private readonly ILevelAnimationService _animationService;
+    private readonly IProgressRestoreService _progressService;
 
-    /*     [Inject] private readonly IWordPieceSlotsContainerFactory containerFactory;
-     */
-    private List<WordPieceSlotsContainer> wordPieceSlotsContainer = new();
-
-    [Inject] private readonly ILevelView levelView;
-    [Inject] private readonly LevelModel levelModel;
-    [Inject] private readonly WordPiecesPool wordPiecesPool;
-
-    [Inject] private readonly IWordPieceAnimator animator;
-
-    private List<WordPiece> activeWordPieces = new List<WordPiece>();
+    public LevelInitializer(
+        ILevelView levelView,
+        IWordPieceSlotsService slotsService,
+        IWordPiecesService wordPiecesService,
+        ILevelAnimationService animationService,
+        IProgressRestoreService progressService)
+    {
+        _levelView = levelView;
+        _slotsService = slotsService;
+        _wordPiecesService = wordPiecesService;
+        _animationService = animationService;
+        _progressService = progressService;
+    }
 
     public async void InitializeLevel(
         Dictionary<int, Dictionary<int, string>> correctMapping,
-        Dictionary<int, string> missingSlots, GameProgress progress = null
-        )
+        Dictionary<int, string> missingSlots,
+        GameProgress progress = null)
     {
-        foreach (var container in wordPieceSlotsContainer)
-        {
-            if (container != null)
-                containerPool.ReturnContainer(container);
-        }
-        wordPieceSlotsContainer.Clear();
-        wordPieceSlotsContainer.Add(await containerPool.GetContainerAsync());
-        wordPieceSlotsContainer.Add(await containerPool.GetContainerAsync());
-        wordPieceSlotsContainer.Add(await containerPool.GetContainerAsync());
-        wordPieceSlotsContainer.Add(await containerPool.GetContainerAsync());
+        await ResetLevel();
 
+        var wordPieceSlots = await _slotsService.CreateWordPieceSlots(correctMapping, missingSlots);
+        var wordPieces = await _wordPiecesService.CreateWordPieces(correctMapping, missingSlots);
 
+        _levelView.SetUIElements(wordPieceSlots, wordPieces);
+        await _animationService.PlayLevelStartAnimation(wordPieces);
 
-        foreach (var wordPiece in activeWordPieces)
+        if (progress != null)
         {
-            wordPiecesPool.ReturnWordPiece(wordPiece);
-        }
-        activeWordPieces.Clear();
-        var wordPieces = new List<WordPiece>();
-        var wordPieceSlots = new List<WordPieceSlot>();
-        var wordIndex = 0;
-        foreach (var correctMap in correctMapping)
-        {
-            wordPieceSlotsContainer[wordIndex]
-                .Initialize(correctMapping[correctMap.Key], missingSlots);
-            wordPieceSlots.AddRange(wordPieceSlotsContainer[wordIndex].ActiveWordPieceSlots.AsValueEnumerable().ToList());
-            wordIndex++;
-        }
-        var shuffledMap = correctMapping.Values.AsValueEnumerable().ToList();
-        shuffledMap.ShuffleUnity();
-        
-        foreach (var correctMap in shuffledMap)
-        {
-            var strings = correctMap.AsValueEnumerable().ToList();
-            strings.Shuffle();
-            var missingPieces = strings.AsValueEnumerable().Where(a => missingSlots.ContainsKey(a.Key)).ToList();
-            foreach (var k in missingPieces)
-            {
-                var availableWordPiece = await wordPiecesPool.GetWordPieceAsync();
-                availableWordPiece.Initialize(k.Value, k.Key);
-                activeWordPieces.Add(availableWordPiece);
-                wordPieces.Add(availableWordPiece);
-            }
-        }
-        levelView.SetUIElements(wordPieceSlots, wordPieces);
-        animator.PlaySequentialAppearAnimation(wordPieces.Select(a => a.gameObject).ToList(), 0.025f);
-        if (progress != null && progress.WordPiecesMapping.Count > 0)
-        {
-            levelModel.InitializeFromProgress();
+            await _progressService.RestoreProgress(progress);
         }
     }
 
-    public async void Initialize()
+
+    private async UniTask ResetLevel()
     {
-        await containerPool.Initialize();
+        await UniTask.WhenAll(
+            _slotsService.ResetSlots(),
+            _wordPiecesService.ResetWordPieces()
+        );
     }
 }

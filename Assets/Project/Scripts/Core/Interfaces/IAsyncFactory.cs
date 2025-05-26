@@ -8,6 +8,6 @@ namespace Core.Interfaces
     public interface IAsyncFactory<T> : IDisposable
     {
         UniTask Initialize();
-        UniTask<T> CreateAsync();
+        T Create();
     }
 }

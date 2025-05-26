@@ -111,17 +111,18 @@ public class LevelPresenter : IInitializable, IDisposable
                 break;
 
             case MappingUpdate.UpdateType.InitializeAll:
-
+                if (model.IsLevelFull())
+                    OnValidateLevelPressed();
                 break;
         }
 
         model.UpdateProgress(currentProgress);
 
         view.UpdateUIFromMappings(model.WordPiecesMappings);
-        if (model.GuessedWords.Count == 4)
+        if (model.IsLevelFull())
             OnValidateLevelPressed();
     }
-    
+
     private void ResetAllWordPiecesToInitialPositions()
     {
         model.ResetWordPieceMappings();

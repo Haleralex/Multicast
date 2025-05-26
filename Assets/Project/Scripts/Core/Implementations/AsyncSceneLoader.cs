@@ -22,18 +22,15 @@ namespace Core
 
         public async UniTask LoadGameplayScene()
         {
-            // Сначала выгружаем текущую активную сцену
             Scene currentScene = SceneManager.GetActiveScene();
 
 
             await Resources.UnloadUnusedAssets();
             System.GC.Collect();
 
-            // Теперь загружаем новую сцену
             var loadOperation = Addressables.LoadSceneAsync(GAMEPLAY_SCENE, LoadSceneMode.Additive);
 
-            // Ждем завершения загрузки
-            await loadOperation.Task;
+            await loadOperation.ToUniTask();
 
             if (loadOperation.Status == AsyncOperationStatus.Succeeded)
             {
@@ -48,18 +45,15 @@ namespace Core
             {
                 try
                 {
-                    // Проверяем, не первая ли это сцена, загруженная через билд настройки
                     if (currentScene.buildIndex == 0)
                     {
-                        // Для первой сцены используем SceneManager
                         await SceneManager.UnloadSceneAsync(currentScene);
                         Debug.Log($"First scene {currentScene.name} unloaded successfully.");
                     }
                     else if (currentSceneInstance.Scene.isLoaded)
                     {
-                        // Для сцен, загруженных через Addressables
                         var unloadHandle = Addressables.UnloadSceneAsync(currentSceneInstance);
-                        await unloadHandle.Task;
+                        await unloadHandle.ToUniTask();
                         Debug.Log($"Scene {currentSceneInstance.Scene.name} unloaded successfully.");
                     }
                 }
@@ -73,18 +67,14 @@ namespace Core
 
         public async UniTask LoadMenuScene()
         {
-            // Сначала выгружаем текущую активную сцену
             Scene currentScene = SceneManager.GetActiveScene();
-
 
             await Resources.UnloadUnusedAssets();
             System.GC.Collect();
 
-            // Теперь загружаем новую сцену
             var loadOperation = Addressables.LoadSceneAsync(MENU_SCENE, LoadSceneMode.Additive);
 
-            // Ждем завершения загрузки
-            await loadOperation.Task;
+            await loadOperation.ToUniTask();
 
             if (loadOperation.Status == AsyncOperationStatus.Succeeded)
             {
@@ -99,18 +89,15 @@ namespace Core
             {
                 try
                 {
-                    // Проверяем, не первая ли это сцена, загруженная через билд настройки
                     if (currentScene.buildIndex == 0)
                     {
-                        // Для первой сцены используем SceneManager
                         await SceneManager.UnloadSceneAsync(currentScene);
                         Debug.Log($"First scene {currentScene.name} unloaded successfully.");
                     }
                     else if (currentSceneInstance.Scene.isLoaded)
                     {
-                        // Для сцен, загруженных через Addressables
                         var unloadHandle = Addressables.UnloadSceneAsync(currentSceneInstance);
-                        await unloadHandle.Task;
+                        await unloadHandle.ToUniTask();
                         Debug.Log($"Scene {currentSceneInstance.Scene.name} unloaded successfully.");
                     }
                 }
