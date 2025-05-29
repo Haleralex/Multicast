@@ -11,6 +11,9 @@
     <type fullname="StartupConfig" preserve="all" />
   </assembly>
   <assembly fullname="Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="AnimationsConfig" preserve="all" />
+    <type fullname="Core.AudioManager" preserve="all" />
+    <type fullname="Core.AudioSettingsConfig" preserve="all" />
     <type fullname="GameplayStarterView" preserve="all" />
     <type fullname="LevelCompleteMessageView" preserve="all" />
     <type fullname="LevelControlsView" preserve="all" />
@@ -20,6 +23,7 @@
     <type fullname="WordPieceSlotsContainer" preserve="all" />
     <type fullname="WordPiecesView" preserve="all" />
     <type fullname="WordSlotsView" preserve="all" />
+    <type fullname="Core.AudioType" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="Navigation, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="Navigation.NavigatorView" preserve="all" />
@@ -34,6 +38,7 @@
   </assembly>
   <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
     <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
+    <type fullname="UnityEngine.AddressableAssets.AssetReferenceT`1" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
     <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
@@ -57,7 +62,9 @@
     <type fullname="TMPro.VertexGradient" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.AudioClip" preserve="all" />
     <type fullname="UnityEngine.AudioListener" preserve="all" />
+    <type fullname="UnityEngine.AudioSource" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="UnityEngine.Camera" preserve="all" />
@@ -115,6 +122,10 @@
   </assembly>
   <assembly fullname="Zenject, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="Zenject.SceneContext" preserve="all" />
+  </assembly>
+  <assembly fullname="AYellowpaper.SerializedCollections">
+    <type fullname="AYellowpaper.SerializedCollections.SerializedDictionary`2" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedKeyValuePair`2" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="UnityEngine.TextCoreFontEngineModule">
     <type fullname="UnityEngine.TextCore.FaceInfo" preserve="nothing" serialized="true" />
