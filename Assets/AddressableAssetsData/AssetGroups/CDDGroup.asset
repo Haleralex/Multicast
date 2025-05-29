@@ -36,8 +36,7 @@ MonoBehaviour:
   - m_GUID: 20df5735afcfc944d90422788c302c75
     m_Address: AudioSettingsConfig
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - Audio
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 43b29ec56e46e654591d382089d4e751
     m_Address: LevelData_3
@@ -80,8 +79,7 @@ MonoBehaviour:
   - m_GUID: 8e31459513985e44f995f18fa0c72e15
     m_Address: AudioManager
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - Audio
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a4e1f6cbd9fd9a54cb949de1e3adca23
     m_Address: Menu

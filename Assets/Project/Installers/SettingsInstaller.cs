@@ -12,7 +12,7 @@ namespace Settings
 #if !UNITY_ANDROID
             Container.Bind<IVibrator>().To<MokVibrator>().AsSingle().NonLazy();
 #endif
-            Container.Bind<VolumeSetter>().AsTransient();
+            Container.Bind<IVolumeSetter>().To<VolumeSetter>().AsTransient();
             Container.Bind<VibrationSetter>().AsTransient();
 
             Container.Bind<SettingsView>()

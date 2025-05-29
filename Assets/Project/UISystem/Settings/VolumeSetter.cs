@@ -1,9 +1,9 @@
 using UnityEngine;
 namespace Settings
 {
-    public class VolumeSetter
+    public class VolumeSetter : IVolumeSetter
     {
-        public void SetVolumeValue(float value)
+        public void SetVolume(float value)
         {
             AudioListener.volume = value;
         }

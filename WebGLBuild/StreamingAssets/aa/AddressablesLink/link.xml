@@ -11,6 +11,7 @@
     <type fullname="StartupConfig" preserve="all" />
   </assembly>
   <assembly fullname="Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="AnimationsConfig" preserve="all" />
     <type fullname="Core.AudioManager" preserve="all" />
     <type fullname="Core.AudioSettingsConfig" preserve="all" />
     <type fullname="GameplayStarterView" preserve="all" />
@@ -37,6 +38,7 @@
   </assembly>
   <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
     <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
+    <type fullname="UnityEngine.AddressableAssets.AssetReferenceT`1" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
     <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />

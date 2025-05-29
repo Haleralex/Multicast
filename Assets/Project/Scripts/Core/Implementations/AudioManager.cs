@@ -1,4 +1,6 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using Zenject;
 namespace Core
 {
@@ -6,7 +8,7 @@ namespace Core
     {
         [SerializeField] private AudioSource mainAudioSource;
         [SerializeField] private AudioSource sideAudioSource;
-
+        /* [Inject] private readonly IAudioLoader _audioLoader; */
         [Inject] private readonly AudioSettingsConfig _audioSettingsConfig;
 
         private void Awake()
@@ -19,20 +21,21 @@ namespace Core
                 sideAudioSource.loop = false;
         }
 
-        public void PlayBackgroundMusic()
+        public async void PlayBackgroundMusic()
         {
             if (mainAudioSource == null)
                 return;
 
-            if(mainAudioSource.isPlaying)
+            if (mainAudioSource.isPlaying)
                 return;
 
             if (!_audioSettingsConfig.AudioClips.TryGetValue(AudioType.Menu, out var audioClip))
             {
                 return;
             }
-
-            mainAudioSource.PlayOneShot(audioClip);
+            var testAudio = Addressables.LoadAssetAsync<AudioClip>(audioClip);
+            await testAudio.ToUniTask();
+            mainAudioSource.PlayOneShot(testAudio.Result);
         }
 
         public void StopBackgroundMusic()
@@ -43,7 +46,7 @@ namespace Core
             mainAudioSource.Stop();
         }
 
-        public void PlayClip(AudioType audioType)
+        public async void PlayClip(AudioType audioType)
         {
             if (sideAudioSource == null)
                 return;
@@ -53,7 +56,9 @@ namespace Core
                 return;
             }
 
-            sideAudioSource.PlayOneShot(audioClip);
+            var testAudio = Addressables.LoadAssetAsync<AudioClip>(audioClip);
+            await testAudio.ToUniTask();
+            sideAudioSource.PlayOneShot(testAudio.Result);
         }
 
         public void SetVolumeValue(float value)

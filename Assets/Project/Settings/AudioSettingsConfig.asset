@@ -15,6 +15,16 @@ MonoBehaviour:
   audioClips:
     _serializedList:
     - Key: 0
-      Value: {fileID: 8300000, guid: 02ab79ab8a83e8349b0a42d0a9076d80, type: 3}
+      Value:
+        m_AssetGUID: 02ab79ab8a83e8349b0a42d0a9076d80
+        m_SubObjectName: 
+        m_SubObjectGUID: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
     - Key: 1
-      Value: {fileID: 8300000, guid: 13f6fc59c1b48a84a8f71c79ec4fc136, type: 3}
+      Value:
+        m_AssetGUID: 13f6fc59c1b48a84a8f71c79ec4fc136
+        m_SubObjectName: 
+        m_SubObjectGUID: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 1

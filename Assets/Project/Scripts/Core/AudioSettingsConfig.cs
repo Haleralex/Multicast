@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Core
 {
@@ -8,7 +9,7 @@ namespace Core
     public class AudioSettingsConfig : ScriptableObject
     {
         [SerializeField, SerializedDictionary("Audio Type", "Audio Clip")]
-        private SerializedDictionary<AudioType, AudioClip> audioClips = new();
-        public IReadOnlyDictionary<AudioType, AudioClip> AudioClips => audioClips;
+        private SerializedDictionary<AudioType, AssetReferenceT<AudioClip>> audioClips = new();
+        public IReadOnlyDictionary<AudioType, AssetReferenceT<AudioClip>> AudioClips => audioClips;
     }
 }
