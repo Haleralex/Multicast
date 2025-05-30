@@ -22,14 +22,6 @@ public class WordPiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     public RectTransform rectTransform;
     public int Index;
 
-    private IWordPieceAnimator animator;
-
-    [Inject]
-    public void Construct(IWordPieceAnimator animator)
-    {
-        this.animator = animator;
-    }
-
     public void Initialize(string fragment, int index)
     {
         this.fragment = fragment;

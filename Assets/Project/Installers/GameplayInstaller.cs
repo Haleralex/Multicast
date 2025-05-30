@@ -39,6 +39,7 @@ public class GameplayInstaller : MonoInstaller<GameplayInstaller>
 
         Container.BindInterfacesAndSelfTo<LevelPresenter>().AsSingle().NonLazy();
         Container.Bind<IWordPieceAnimator>().To<WordPieceDOTweenAnimator>().AsSingle();
+        Container.Bind<IWordPieceSlotAnimator>().To<WordPieceSlotDOTweenAnimator>().AsSingle();
     }
 
 }

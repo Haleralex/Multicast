@@ -42,19 +42,35 @@ public class WordSlotsView : MonoBehaviour
         return wordPieceSlots.TryGetValue(index, out slot);
     }
 
-    public void UpdateSlotsFromMappings(IReadOnlyDictionary<int, int> mappings)
+    public void SetOccupationCondition(MappingUpdate mappings, IReadOnlyDictionary<int, int> wordPieceMappings = null)
     {
+        switch (mappings.Type)
+        {
+            case MappingUpdate.UpdateType.Add:
+                if (mappings.SlotId.HasValue)
+                {
 
-        foreach (var slot in wordPieceSlots.Values)
-        {
-            slot.SetOccupied(false);
-        }
-        foreach (var mapping in mappings)
-        {
-            if (wordPieceSlots.TryGetValue(mapping.Value, out var slot))
-            {
-                slot.SetOccupied(true);
-            }
+                    var addedSlot = wordPieceSlots[mappings.SlotId.Value];
+                    addedSlot.SetOccupied(true);
+                }
+                break;
+
+            case MappingUpdate.UpdateType.Remove:
+                if (mappings.SlotId.HasValue)
+                {
+                    // Handle removal of a specific word piece if needed
+
+                    var removedSlot = wordPieceSlots[mappings.SlotId.Value];
+                    removedSlot.SetOccupied(false);
+                }
+                break;
+            case MappingUpdate.UpdateType.InitializeAll:
+                foreach (var slotTuple in wordPieceMappings)
+                {
+                    var slot = wordPieceSlots[slotTuple.Value];
+                    slot.SetOccupied(true);
+                }
+                break;
         }
     }
 }

@@ -7,6 +7,7 @@ using Zenject;
 public class LevelView : MonoBehaviour, ILevelView
 {
     public event Action<WordPiece> WordPieceSelected;
+    public event Action<WordPiece> WordPieceMoving;
     public event Action<WordPiece> WordPieceReleased;
     public event Action<WordPiece> WordPieceDoubleClicked;
     public event Action ValidateLevelPressed;
@@ -28,6 +29,7 @@ public class LevelView : MonoBehaviour, ILevelView
     private void OnEnable()
     {
         wordPiecesView.WordPieceSelected += OnWordPieceSelected;
+        wordPiecesView.WordPieceMoving += OnWordPieceMoving;
         wordPiecesView.WordPieceReleased += OnWordPieceReleased;
         wordPiecesView.WordPieceDoubleClicked += OnWordPieceDoubleClicked;
 
@@ -42,6 +44,7 @@ public class LevelView : MonoBehaviour, ILevelView
     private void OnDisable()
     {
         wordPiecesView.WordPieceSelected -= OnWordPieceSelected;
+        wordPiecesView.WordPieceMoving -= OnWordPieceMoving;
         wordPiecesView.WordPieceReleased -= OnWordPieceReleased;
         wordPiecesView.WordPieceDoubleClicked -= OnWordPieceDoubleClicked;
 
@@ -70,7 +73,6 @@ public class LevelView : MonoBehaviour, ILevelView
 
     public void UpdateUIFromMappings(IReadOnlyDictionary<int, int> mappings)
     {
-        wordSlotsView.UpdateSlotsFromMappings(mappings);
         foreach (var mapping in mappings)
         {
             if (wordSlotsView.TryGetSlot(mapping.Value, out var slot))
@@ -78,6 +80,10 @@ public class LevelView : MonoBehaviour, ILevelView
                 wordPiecesView.ChangeWordPieceParent(mapping.Key, slot.transform, true);
             }
         }
+    }
+    public void SetOccupationCondition(MappingUpdate mappings, IReadOnlyDictionary<int, int> wordPieceMappings = null)
+    {
+        wordSlotsView.SetOccupationCondition(mappings,wordPieceMappings);
     }
 
     public WordPieceSlot FindClosestEmptySlot(WordPiece wordPiece, float maxDistance = 10f)
@@ -94,6 +100,11 @@ public class LevelView : MonoBehaviour, ILevelView
     private void OnWordPieceSelected(WordPiece wordPiece)
     {
         WordPieceSelected?.Invoke(wordPiece);
+    }
+
+    private void OnWordPieceMoving(WordPiece wordPiece)
+    {
+        WordPieceMoving?.Invoke(wordPiece);
     }
 
     private void OnWordPieceReleased(WordPiece wordPiece)

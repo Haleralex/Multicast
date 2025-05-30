@@ -146,7 +146,7 @@ public class LevelModel
         if (wordPiecesMappings.TryGetValue(wordPieceId, out var slotId))
         {
             wordPiecesMappings.Remove(wordPieceId);
-            WordPiecesMappingChanged?.Invoke(MappingUpdate.Remove(wordPieceId));
+            WordPiecesMappingChanged?.Invoke(MappingUpdate.Remove(wordPieceId,slotId));
 
             CheckForBrokenWords(slotId);
         }

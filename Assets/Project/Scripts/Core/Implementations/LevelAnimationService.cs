@@ -14,7 +14,8 @@ public class LevelAnimationService : ILevelAnimationService
 
     public async UniTask PlayLevelStartAnimation(List<WordPiece> wordPieces)
     {
-        List<GameObject> gameObjects = wordPieces.Select(piece => piece.gameObject).ToList();
+        List<GameObject> gameObjects
+            = wordPieces.Select(piece => piece.gameObject).ToList();
         _animator.PlaySequentialAppearAnimation(gameObjects);
         await UniTask.CompletedTask;
     }

@@ -34,6 +34,7 @@ public class LevelPresenter : IInitializable, IDisposable
     public async void Initialize()
     {
         view.WordPieceSelected += OnWordPieceSelected;
+        view.WordPieceMoving += OnWordPieceMoving;
         view.WordPieceReleased += OnWordPieceReleased;
         view.WordPieceDoubleClicked += OnWordPieceDoubleClicked;
         view.ValidateLevelPressed += OnValidateLevelPressed;
@@ -62,7 +63,21 @@ public class LevelPresenter : IInitializable, IDisposable
 
     private void OnWordPieceSelected(WordPiece wordPiece)
     {
-        OnWordPieceMappingChanged(MappingUpdate.Remove(wordPiece.Index));
+        int? slotid = null;
+        if (model.GetCurrentProgress().WordPiecesMapping.TryGetValue(wordPiece.Index, out var realSlotID))
+        {
+            slotid = realSlotID;
+        }
+        OnWordPieceMappingChanged(MappingUpdate.Remove(wordPiece.Index, slotid));
+    }
+
+    private void OnWordPieceMoving(WordPiece wordPiece)
+    {
+        var closestSlot = view.FindClosestEmptySlot(wordPiece);
+        if (closestSlot != null)
+        {
+            closestSlot.SetClosestSlotAniimation();
+        }
     }
 
     private void OnWordPieceReleased(WordPiece wordPiece)
@@ -117,7 +132,7 @@ public class LevelPresenter : IInitializable, IDisposable
         }
 
         model.UpdateProgress(currentProgress);
-
+        view.SetOccupationCondition(update,model.WordPiecesMappings);
         view.UpdateUIFromMappings(model.WordPiecesMappings);
         if (model.IsLevelFull())
             OnValidateLevelPressed();

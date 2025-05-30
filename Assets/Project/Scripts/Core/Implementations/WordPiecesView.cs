@@ -7,12 +7,14 @@ using UnityEngine.UI;
 public class WordPiecesView : MonoBehaviour
 {
     public event Action<WordPiece> WordPieceSelected;
+    public event Action<WordPiece> WordPieceMoving;
     public event Action<WordPiece> WordPieceReleased;
     public event Action<WordPiece> WordPieceDoubleClicked;
 
     [SerializeField] private Transform draggingParent;
 
-    private Dictionary<int, WordPiece> wordPieces = new Dictionary<int, WordPiece>();
+    private Dictionary<int, WordPiece> wordPieces =
+        new();
     private WordPiece selectedWordPiece;
     private Canvas gameFieldCanvas;
     private RectTransform gameFieldCanvasRectTransform;
@@ -23,12 +25,15 @@ public class WordPiecesView : MonoBehaviour
         public int OriginalSiblingIndex;
     }
 
-    private Dictionary<int, WordPieceInitialState> wordPiecesInitialStates = new Dictionary<int, WordPieceInitialState>();
+    private Dictionary<int, WordPieceInitialState> wordPiecesInitialStates
+        = new();
+
 
     public void Initialize(Canvas gameFieldCanvas)
     {
         this.gameFieldCanvas = gameFieldCanvas;
-        this.gameFieldCanvasRectTransform = gameFieldCanvas.GetComponent<RectTransform>();
+        this.gameFieldCanvasRectTransform
+            = gameFieldCanvas.GetComponent<RectTransform>();
     }
 
     public void SetWordPieces(List<WordPiece> pieces)
@@ -139,6 +144,7 @@ public class WordPiecesView : MonoBehaviour
             out Vector3 worldPos);
 
         selectedWordPiece.rectTransform.position = new Vector3(worldPos.x, worldPos.y, selectedWordPiece.rectTransform.position.z);
+        WordPieceMoving?.Invoke(selectedWordPiece);
     }
 
     private void OnDisable()
