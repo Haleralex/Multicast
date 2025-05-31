@@ -2,9 +2,12 @@ using System.Collections.Generic;
 using ZLinq;
 using UnityEngine;
 
-public class WordSlotsView : MonoBehaviour
+/// <summary>
+/// Service for managing the slots where word pieces can be placed.
+/// </summary>
+public class WordSlotsView : IWordSlotsView
 {
-    private Dictionary<int, WordPieceSlot> wordPieceSlots = new();
+    private readonly Dictionary<int, WordPieceSlot> wordPieceSlots = new();
 
     public void SetWordPieceSlots(List<WordPieceSlot> slots)
     {
@@ -19,12 +22,17 @@ public class WordSlotsView : MonoBehaviour
     public WordPieceSlot FindClosestEmptySlot(Vector3 position, float maxDistance = 10f)
     {
         var notOccupiedSlots = wordPieceSlots.Values
-            .AsValueEnumerable().Where(slot => !slot.IsOccupied).ToList();
+            .AsValueEnumerable()
+            .Where(slot => !slot.IsOccupied)
+            .ToList();
         var orderedByDistanceSlots = notOccupiedSlots
-            .AsValueEnumerable().OrderBy(slot => Vector2.Distance(slot.rectTransform.position, position))
+            .AsValueEnumerable()
+            .OrderBy(slot => Vector2.Distance(slot.rectTransform.position, position))
             .ToList();
         var fitSlot = orderedByDistanceSlots
-                        .AsValueEnumerable().FirstOrDefault(slot => Vector2.Distance(slot.rectTransform.position, position) < maxDistance);
+            .AsValueEnumerable()
+            .FirstOrDefault(slot =>
+                Vector2.Distance(slot.rectTransform.position, position) < maxDistance);
 
         return fitSlot;
     }
@@ -42,19 +50,32 @@ public class WordSlotsView : MonoBehaviour
         return wordPieceSlots.TryGetValue(index, out slot);
     }
 
-    public void UpdateSlotsFromMappings(IReadOnlyDictionary<int, int> mappings)
+    public void SetOccupationCondition(MappingUpdate mappings, IReadOnlyDictionary<int, int> wordPieceMappings = null)
     {
+        switch (mappings.Type)
+        {
+            case MappingUpdate.UpdateType.Add:
+                if (mappings.SlotId.HasValue)
+                {
+                    var addedSlot = wordPieceSlots[mappings.SlotId.Value];
+                    addedSlot.SetOccupied(true);
+                }
+                break;
 
-        foreach (var slot in wordPieceSlots.Values)
-        {
-            slot.SetOccupied(false);
-        }
-        foreach (var mapping in mappings)
-        {
-            if (wordPieceSlots.TryGetValue(mapping.Value, out var slot))
-            {
-                slot.SetOccupied(true);
-            }
+            case MappingUpdate.UpdateType.Remove:
+                if (mappings.SlotId.HasValue)
+                {
+                    var removedSlot = wordPieceSlots[mappings.SlotId.Value];
+                    removedSlot.SetOccupied(false);
+                }
+                break;
+            case MappingUpdate.UpdateType.InitializeAll:
+                foreach (var slotTuple in wordPieceMappings)
+                {
+                    var slot = wordPieceSlots[slotTuple.Value];
+                    slot.SetOccupied(true);
+                }
+                break;
         }
     }
 }

@@ -253,9 +253,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87bcc50779e048948a473176ed77557a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameFieldCanvas: {fileID: 392540194}
-  wordPiecesView: {fileID: 392540196}
-  wordSlotsView: {fileID: 392540195}
   levelControlsView: {fileID: 572888713}
   levelCompleteMessageView: {fileID: 243852383}
   simpleLoadingScreen: {fileID: 1782593403}
@@ -717,8 +714,6 @@ GameObject:
   - component: {fileID: 392540194}
   - component: {fileID: 392540193}
   - component: {fileID: 392540192}
-  - component: {fileID: 392540196}
-  - component: {fileID: 392540195}
   m_Layer: 5
   m_Name: GameField
   m_TagString: Untagged
@@ -810,31 +805,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &392540195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 392540190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b68327e2aaac3541a5e377c0b592ce6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &392540196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 392540190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd69ab7705040634682948d582586140, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  draggingParent: {fileID: 204965394}
 --- !u!1 &423708257
 GameObject:
   m_ObjectHideFlags: 0
@@ -2395,6 +2365,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wordPiecesParent: {fileID: 1322369009}
   slotsContainersParent: {fileID: 886952002}
+  draggingParent: {fileID: 204965394}
+  gameFieldCanvas: {fileID: 392540194}
 --- !u!4 &1747328103
 Transform:
   m_ObjectHideFlags: 0

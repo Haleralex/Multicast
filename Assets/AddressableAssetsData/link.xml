@@ -21,8 +21,6 @@
     <type fullname="WordPiece" preserve="all" />
     <type fullname="WordPieceSlot" preserve="all" />
     <type fullname="WordPieceSlotsContainer" preserve="all" />
-    <type fullname="WordPiecesView" preserve="all" />
-    <type fullname="WordSlotsView" preserve="all" />
     <type fullname="Core.AudioType" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="Navigation, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
