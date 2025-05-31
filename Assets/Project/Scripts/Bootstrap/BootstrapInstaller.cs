@@ -10,7 +10,7 @@ public class BootstrapInstaller : MonoInstaller
         Container.BindInterfacesAndSelfTo<AssetLoadingDisplay>()
             .FromComponentInHierarchy().AsSingle().NonLazy();
         Container.Bind<IAssetLoader>().To<AssetLoader>().AsSingle().NonLazy();
-        Container.BindInterfacesAndSelfTo<ServiceBootstrapper>().AsSingle().NonLazy();
+        Container.Bind<IServiceBootstrapper>().To<ServiceBootstrapper>().AsSingle().NonLazy();
         Container.Bind<MenuLoader>().AsTransient().NonLazy();
         Container.BindInterfacesAndSelfTo<BootstrapInitializer>().AsSingle().NonLazy();
         Application.targetFrameRate = -1;

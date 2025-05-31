@@ -37,7 +37,6 @@ public class LevelPresenter : IInitializable, IDisposable
         view.WordPieceMoving += OnWordPieceMoving;
         view.WordPieceReleased += OnWordPieceReleased;
         view.WordPieceDoubleClicked += OnWordPieceDoubleClicked;
-        view.ValidateLevelPressed += OnValidateLevelPressed;
         view.NextLevelPressed += SetNextLevel;
         view.GoToMenuPressed += OnGoToMenuPressed;
         model.WordPiecesMappingChanged += OnWordPieceMappingChanged;
@@ -70,13 +69,25 @@ public class LevelPresenter : IInitializable, IDisposable
         }
         OnWordPieceMappingChanged(MappingUpdate.Remove(wordPiece.Index, slotid));
     }
-
+    private WordPieceSlot currentClosestSlot;
     private void OnWordPieceMoving(WordPiece wordPiece)
     {
         var closestSlot = view.FindClosestEmptySlot(wordPiece);
         if (closestSlot != null)
         {
-            closestSlot.SetClosestSlotAniimation();
+            if (currentClosestSlot != closestSlot)
+            {
+                closestSlot.SetClosestSlotAniimation();
+                currentClosestSlot = closestSlot;
+            }
+        }
+        else
+        {
+            if (currentClosestSlot != null)
+            {
+                currentClosestSlot.ResetToDefaultCondition();
+                currentClosestSlot = null;
+            }
         }
     }
 
@@ -132,7 +143,7 @@ public class LevelPresenter : IInitializable, IDisposable
         }
 
         model.UpdateProgress(currentProgress);
-        view.SetOccupationCondition(update,model.WordPiecesMappings);
+        view.SetOccupationCondition(update, model.WordPiecesMappings);
         view.UpdateUIFromMappings(model.WordPiecesMappings);
         if (model.IsLevelFull())
             OnValidateLevelPressed();
@@ -187,7 +198,6 @@ public class LevelPresenter : IInitializable, IDisposable
         view.WordPieceSelected -= OnWordPieceSelected;
         view.WordPieceReleased -= OnWordPieceReleased;
         view.WordPieceDoubleClicked -= OnWordPieceDoubleClicked;
-        view.ValidateLevelPressed -= OnValidateLevelPressed;
         view.NextLevelPressed -= SetNextLevel;
         view.GoToMenuPressed -= OnGoToMenuPressed;
         model.WordPiecesMappingChanged -= OnWordPieceMappingChanged;

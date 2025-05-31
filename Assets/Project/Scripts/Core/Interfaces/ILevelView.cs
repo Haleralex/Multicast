@@ -9,7 +9,6 @@ public interface ILevelView
     event Action<WordPiece> WordPieceSelected;
     event Action<WordPiece> WordPieceReleased;
     event Action<WordPiece> WordPieceDoubleClicked;
-    event Action ValidateLevelPressed;
     event Action NextLevelPressed;
     event Action GoToMenuPressed;
     void UpdateUIFromMappings(IReadOnlyDictionary<int, int> mappings);

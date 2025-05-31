@@ -144,8 +144,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8a56692076a0cb946bc7ee529f56667e, type: 2}
   m_ActiveProfileId: 963fad36e7069e64184d9eee27b6e692
   m_CcdManagedData:
-    EnvironmentId: 6cb3b5b2-dda1-4064-88a0-f10256cf7f88
-    EnvironmentName: production
-    BucketId: 50f2c449-c585-46a2-aaf0-3180c55d8609
+    EnvironmentId: ea254504-c18a-43f7-a666-fb00b23d3d2b
+    EnvironmentName: development
+    BucketId: f1bee910-f5ce-4287-883c-0ea4990ca5ec
     Badge: latest
     State: 0

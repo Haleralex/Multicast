@@ -7,7 +7,8 @@ public class GameplayInstaller : MonoInstaller<GameplayInstaller>
 {
     [SerializeField] private Transform wordPiecesParent;
     [SerializeField] private Transform slotsContainersParent;
-
+    [SerializeField] private Transform draggingParent;
+    [SerializeField] private Canvas gameFieldCanvas;
 
     public override void InstallBindings()
     {
@@ -19,6 +20,14 @@ public class GameplayInstaller : MonoInstaller<GameplayInstaller>
                 .WithId("SlotsContainersParent")
                 .FromInstance(slotsContainersParent);
 
+        Container.Bind<Transform>()
+                .WithId("DraggingParent")
+                .FromInstance(draggingParent);
+
+        Container.Bind<Canvas>()
+                .WithId("GameFieldCanvas")
+                .FromInstance(gameFieldCanvas);
+
         Container.Bind<IValidator>().To<Validator>().AsSingle();
         Container.BindInterfacesAndSelfTo<WordPiecesFactory>().AsSingle().NonLazy();
         Container.BindInterfacesAndSelfTo<WordPieceSlotsContainerFactory>().AsSingle().NonLazy();
@@ -26,7 +35,9 @@ public class GameplayInstaller : MonoInstaller<GameplayInstaller>
         Container.BindInterfacesAndSelfTo<WordPiecesPool>().AsSingle().NonLazy();
         Container.BindInterfacesAndSelfTo<WordPieceSlotsContainerPool>().AsSingle().NonLazy();
 
-        // Добавляем недостающие сервисы
+        Container.BindInterfacesAndSelfTo<WordPiecesView>().AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<WordSlotsView>().AsSingle().NonLazy();
+
         Container.Bind<IWordPieceSlotsService>().To<WordPieceSlotsService>().AsSingle();
         Container.Bind<IWordPiecesService>().To<WordPiecesService>().AsSingle();
         Container.Bind<ILevelAnimationService>().To<LevelAnimationService>().AsSingle();

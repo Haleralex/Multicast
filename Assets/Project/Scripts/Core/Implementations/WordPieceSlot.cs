@@ -34,14 +34,16 @@ public class WordPieceSlot : MonoBehaviour
 
     public void SetClosestSlotAniimation()
     {
-
         wordPieceSlotAnimator?.SetClosestSlotAnimation(this);
-
+    }
+    public void ResetToDefaultCondition()
+    {
+        wordPieceSlotAnimator?.ResetToDefaultCondition(this);
     }
 
     public void SetOccupied(bool occupied)
     {
         IsOccupied = occupied;
-        wordPieceSlotAnimator?.ResetToDefaultCondition(this);
+        ResetToDefaultCondition();
     }
 }

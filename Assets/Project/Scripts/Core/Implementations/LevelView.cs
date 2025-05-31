@@ -10,21 +10,16 @@ public class LevelView : MonoBehaviour, ILevelView
     public event Action<WordPiece> WordPieceMoving;
     public event Action<WordPiece> WordPieceReleased;
     public event Action<WordPiece> WordPieceDoubleClicked;
-    public event Action ValidateLevelPressed;
     public event Action NextLevelPressed;
     public event Action GoToMenuPressed;
 
-    [SerializeField] private Canvas gameFieldCanvas;
-    [SerializeField] private WordPiecesView wordPiecesView;
-    [SerializeField] private WordSlotsView wordSlotsView;
+    
+    [Inject] private readonly IWordPiecesView wordPiecesView;
+    [Inject] private readonly IWordSlotsView wordSlotsView;
     [SerializeField] private LevelControlsView levelControlsView;
     [SerializeField] private LevelCompleteMessageView levelCompleteMessageView;
     [SerializeField] private GameObject simpleLoadingScreen; 
 
-    private void Awake()
-    {
-        wordPiecesView.Initialize(gameFieldCanvas);
-    }
 
     private void OnEnable()
     {
@@ -115,11 +110,6 @@ public class LevelView : MonoBehaviour, ILevelView
     private void OnWordPieceDoubleClicked(WordPiece wordPiece)
     {
         WordPieceDoubleClicked?.Invoke(wordPiece);
-    }
-
-    private void OnValidateLevelPressed()
-    {
-        ValidateLevelPressed?.Invoke();
     }
 
     private void OnNextLevelPressed()
