@@ -54,10 +54,11 @@ jobs:
         run: |
           if [ -d "WebGLBuild/WebGL" ]; then
             echo "Found WebGLBuild/WebGL, copying contents to root"
-            # Копируем файлы с принудительной перезаписью
-            cp -rf WebGLBuild/WebGL/* WebGLBuild/ 2>/dev/null || true
-            # Удаляем папку WebGL
-            rm -rf WebGLBuild/WebGL
+            # Используем sudo для всех операций с файлами
+            sudo cp -rf WebGLBuild/WebGL/* WebGLBuild/ 2>/dev/null || true
+            sudo rm -rf WebGLBuild/WebGL
+            # Исправляем права после операций
+            sudo chown -R runner:docker WebGLBuild/
             echo "Successfully moved WebGL build files"
           else
             echo "WebGLBuild/WebGL not found"
@@ -66,6 +67,9 @@ jobs:
       # Перемещение index.html и связанных файлов в корень
       - name: Prepare files for deployment
         run: |
+          # Убеждаемся что права правильные
+          sudo chown -R runner:docker WebGLBuild/ 2>/dev/null || true
+          
           if [ -f WebGLBuild/index.html ]; then
             echo "index.html found in WebGLBuild root"
           else
@@ -73,9 +77,7 @@ jobs:
             found=$(find WebGLBuild -name "index.html" -type f)
             if [ -n "$found" ]; then
               echo "Found index.html at $found"
-              # Перемещаем все файлы из папки с index.html в корень WebGLBuild
               mv $(dirname "$found")/* WebGLBuild/
-              # Удаляем пустую подпапку (например, Build), если она осталась
               find WebGLBuild -type d -empty -delete
             else
               echo "Error: index.html not found in WebGLBuild"
