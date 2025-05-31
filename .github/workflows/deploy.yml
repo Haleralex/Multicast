@@ -30,13 +30,38 @@ jobs:
         with:
           targetPlatform: WebGL
           unityVersion: 6000.0.33f1
-          buildPath: WebGLBuild
+          buildsPath: WebGLBuild
+          buildName: WebGL
 
       # Отладочный шаг: Показать структуру WebGLBuild
       - name: Debug WebGLBuild contents
         run: |
-          echo "Contents of WebGLBuild:"
-          find WebGLBuild -type f
+          echo "Contents of build directory:"
+          ls -la
+          if [ -d "build" ]; then
+            echo "Contents of build/:"
+            find build -type f | head -20
+          fi
+          if [ -d "WebGLBuild" ]; then
+            echo "Contents of WebGLBuild:"
+            find WebGLBuild -type f | head -20
+          else
+            echo "WebGLBuild directory not found"
+          fi
+
+      # Перемещение файлов из build в WebGLBuild
+      - name: Move build files
+        run: |
+          if [ -d "build/WebGL" ]; then
+            mv build/WebGL WebGLBuild
+            echo "Moved build/WebGL to WebGLBuild"
+          elif [ -d "build" ]; then
+            mv build WebGLBuild
+            echo "Moved build to WebGLBuild"
+          else
+            echo "No build directory found!"
+            exit 1
+          fi
 
       # Перемещение index.html и связанных файлов в корень
       - name: Prepare files for deployment
