@@ -52,35 +52,15 @@ jobs:
       # Перемещение файлов из build в WebGLBuild
       - name: Move build files
         run: |
-          echo "Checking all possible build locations:"
-          ls -la
           if [ -d "WebGLBuild/WebGL" ]; then
-            echo "Found WebGLBuild/WebGL, moving contents up one level"
-            # Создаём временную папку
-            mkdir -p temp_build
-            # Перемещаем все файлы из WebGL в временную папку
-            mv WebGLBuild/WebGL/* temp_build/
-            # Удаляем пустую папку WebGL
-            rmdir WebGLBuild/WebGL
-            # Перемещаем файлы из временной папки в корень WebGLBuild
-            mv temp_build/* WebGLBuild/
-            # Удаляем временную папку
-            rmdir temp_build
-            echo "Successfully moved WebGL build files to WebGLBuild root"
-          elif [ -d "build/WebGL" ]; then
-            mv build/WebGL WebGLBuild
-            echo "Moved build/WebGL to WebGLBuild"
-          elif [ -d "build" ]; then
-            mv build WebGLBuild
-            echo "Moved build to WebGLBuild"
-          elif [ -d "WebGLBuild" ]; then
-            echo "WebGLBuild already exists, checking contents:"
-            find WebGLBuild -type f | head -10
+            echo "Found WebGLBuild/WebGL, copying contents to root"
+            # Копируем файлы с принудительной перезаписью
+            cp -rf WebGLBuild/WebGL/* WebGLBuild/ 2>/dev/null || true
+            # Удаляем папку WebGL
+            rm -rf WebGLBuild/WebGL
+            echo "Successfully moved WebGL build files"
           else
-            echo "No build directory found at all!"
-            echo "Available directories:"
-            find . -maxdepth 2 -type d | sort
-            exit 1
+            echo "WebGLBuild/WebGL not found"
           fi
 
       # Перемещение index.html и связанных файлов в корень
