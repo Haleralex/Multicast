@@ -52,14 +52,26 @@ jobs:
       # Перемещение файлов из build в WebGLBuild
       - name: Move build files
         run: |
-          if [ -d "build/WebGL" ]; then
+          echo "Checking all possible build locations:"
+          ls -la
+          if [ -d "WebGLBuild/WebGL" ]; then
+            echo "Found WebGLBuild/WebGL, moving contents up one level"
+            mv WebGLBuild/WebGL/* WebGLBuild/
+            rmdir WebGLBuild/WebGL
+            echo "Moved WebGLBuild/WebGL/* to WebGLBuild/"
+          elif [ -d "build/WebGL" ]; then
             mv build/WebGL WebGLBuild
             echo "Moved build/WebGL to WebGLBuild"
           elif [ -d "build" ]; then
             mv build WebGLBuild
             echo "Moved build to WebGLBuild"
+          elif [ -d "WebGLBuild" ]; then
+            echo "WebGLBuild already exists, checking contents:"
+            find WebGLBuild -type f | head -10
           else
-            echo "No build directory found!"
+            echo "No build directory found at all!"
+            echo "Available directories:"
+            find . -maxdepth 2 -type d | sort
             exit 1
           fi
 
