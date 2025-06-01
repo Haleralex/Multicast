@@ -25,11 +25,6 @@ jobs:
           restore-keys: |
             Library-
 
-      # Установка Unity CCD CLI для работы с CCD
-      - name: Install Unity CCD CLI
-        run: |
-          npm install -g @unity/ccd-cli
-
       # Проверка подключения к интернету и CCD
       - name: Test internet and CCD connectivity
         run: |
@@ -42,7 +37,7 @@ jobs:
           echo "Current Addressables profile:"
           find . -name "*.addressables" -exec cat {} \;
 
-      # Сборка проекта (включая начальный каталог Addressables)
+      # Сборка проекта
       - name: Build project
         uses: game-ci/unity-builder@v4
         env:
