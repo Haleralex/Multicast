@@ -14,38 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Default Local Group
   m_GUID: d2d6079eb430c46438a32bd03e1e6774
-  m_SerializeEntries:
-  - m_GUID: 1c932a528094af74c814835057863308
-    m_Address: LevelData_0
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Game_Level
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 1eaee135ce037439d925cee5e41ce026
-    m_Address: Assets/2D Casual UI/Sprite/GUI.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 2d8cfa2c9c805254181020d2ca8ec5ed
-    m_Address: Bootstrap
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 36f3771cf142daa4bbb12bc7ed7c8c82
-    m_Address: Assets/Fonts/JazzCreateBubble SDF.asset
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 58b647c5b2ec4184e9a07a561cdf0644
-    m_Address: Assets/Fonts/JazzCreateBubble.ttf
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7dfae6c0b9b01644eac0532ff7a9da16
-    m_Address: Assets/2D Casual UI/Sprite/GUI2.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 1a5a43b0afc7b0e48be76731faf2cd37, type: 2}
   m_SchemaSet:

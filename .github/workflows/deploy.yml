@@ -2,7 +2,7 @@ name: Build and Deploy Unity WebGL
 on:
   push:
     branches:
-      - develop  
+      - CICDAddressablesBuild  
 jobs:
   build:
     name: Build Unity WebGL
@@ -30,60 +30,10 @@ jobs:
         with:
           targetPlatform: WebGL
           unityVersion: 6000.0.33f1
-          buildPath: WebGLBuild
+          buildsPath: WebGLBuild
 
       # Отладочный шаг: Показать структуру WebGLBuild
       - name: Debug WebGLBuild contents
         run: |
           echo "Contents of WebGLBuild:"
           find WebGLBuild -type f
-
-      # Перемещение index.html и связанных файлов в корень
-      - name: Prepare files for deployment
-        run: |
-          if [ -f WebGLBuild/index.html ]; then
-            echo "index.html found in WebGLBuild root"
-          else
-            echo "index.html not found in root, searching in subdirectories..."
-            found=$(find WebGLBuild -name "index.html" -type f)
-            if [ -n "$found" ]; then
-              echo "Found index.html at $found"
-              # Перемещаем все файлы из папки с index.html в корень WebGLBuild
-              mv $(dirname "$found")/* WebGLBuild/
-              # Удаляем пустую подпапку (например, Build), если она осталась
-              find WebGLBuild -type d -empty -delete
-            else
-              echo "Error: index.html not found in WebGLBuild"
-              exit 1
-            fi
-          fi
-
-      - name: Upload build
-        uses: actions/upload-artifact@v4
-        with:
-          name: webgl-build
-          path: WebGLBuild
-
-  deploy:
-    name: Deploy to GitHub Pages
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download build
-        uses: actions/download-artifact@v4
-        with:
-          name: webgl-build
-          path: WebGLBuild
-
-      # Отладочный шаг: Показать структуру перед деплоем
-      - name: Debug deploy contents
-        run: |
-          echo "Contents of WebGLBuild before deploy:"
-          find WebGLBuild -type f
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.MULTICAST_TOKEN }}
-          publish_dir: WebGLBuild
-          publish_branch: gh-pages
