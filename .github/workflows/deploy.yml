@@ -24,13 +24,7 @@ jobs:
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
             Library-
-
-      # Проверка подключения к интернету и CCD
-      - name: Test internet and CCD connectivity
-        run: |
-          ping -c 4 google.com
-          curl -I https://b977e451-0a43-470b-a492-2393339bbas77.client-api.unity3dusercontent.com
-
+            
       # Проверка профиля Addressables
       - name: Debug Addressables Profile
         run: |
