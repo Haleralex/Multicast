@@ -14,6 +14,16 @@ public class WordPieceSlotDOTweenAnimator : IWordPieceSlotAnimator
         public Vector3 position;
     }
 
+    public void ClearStates()
+    {
+        // Очищаем все сохраненные состояния
+        initialStates.Clear();
+        
+        // Убиваем текущую последовательность анимаций, если она есть
+        sequence?.Kill();
+        sequence = null;
+    }
+
     public void ResetToDefaultCondition(WordPieceSlot wordPieceSlot)
     {
         var rectTransform = wordPieceSlot.rectTransform;

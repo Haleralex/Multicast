@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ZLinq;
 using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// Service for managing the slots where word pieces can be placed.
@@ -12,7 +13,7 @@ public class WordSlotsView : IWordSlotsView
     public void SetWordPieceSlots(List<WordPieceSlot> slots)
     {
         wordPieceSlots.Clear();
-
+        
         foreach (var slot in slots)
         {
             wordPieceSlots[slot.Index] = slot;

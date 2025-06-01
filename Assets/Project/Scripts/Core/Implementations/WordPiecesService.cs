@@ -8,16 +8,19 @@ public class WordPiecesService : IWordPiecesService
 {
     private readonly WordPiecesPool _wordPiecesPool;
     private readonly List<WordPiece> _activeWordPieces = new();
-
-    public WordPiecesService(WordPiecesPool wordPiecesPool)
+    private readonly IWordPieceSlotAnimator _wordPieceSlotAnimator;
+    public WordPiecesService(WordPiecesPool wordPiecesPool,
+    IWordPieceSlotAnimator wordPieceSlotAnimator)
     {
         _wordPiecesPool = wordPiecesPool;
+        _wordPieceSlotAnimator = wordPieceSlotAnimator;
     }
 
     public async UniTask<List<WordPiece>> CreateWordPieces(
         Dictionary<int, Dictionary<int, string>> correctMapping,
         Dictionary<int, string> missingSlots)
     {
+        _wordPieceSlotAnimator.ClearStates();
         await _wordPiecesPool.Initialize();
         
         var wordPieces = new List<WordPiece>();
