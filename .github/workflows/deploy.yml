@@ -1,18 +1,22 @@
-name: Build and Deploy Unity WebGL
+name: Build and Deploy Unity WebGL with Addressables
+
 on:
   push:
     branches:
-      - CICDAddressablesBuild  
+      - CICDAddressablesBuild
+
 jobs:
   build:
     name: Build Unity WebGL
     runs-on: ubuntu-latest
     steps:
+      # Проверка и выгрузка репозитория
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
 
+      # Кэширование Library для ускорения сборки
       - name: Cache Library
         uses: actions/cache@v4
         with:
@@ -21,6 +25,24 @@ jobs:
           restore-keys: |
             Library-
 
+      # Установка Unity CCD CLI для работы с CCD
+      - name: Install Unity CCD CLI
+        run: |
+          npm install -g @unity/ccd-cli
+
+      # Проверка подключения к интернету и CCD
+      - name: Test internet and CCD connectivity
+        run: |
+          ping -c 4 google.com
+          curl -I https://b977e451-0a43-470b-a492-2393339bbas77.client-api.unity3dusercontent.com
+
+      # Проверка профиля Addressables
+      - name: Debug Addressables Profile
+        run: |
+          echo "Current Addressables profile:"
+          find . -name "*.addressables" -exec cat {} \;
+
+      # Сборка проекта (включая начальный каталог Addressables)
       - name: Build project
         uses: game-ci/unity-builder@v4
         env:
@@ -32,12 +54,13 @@ jobs:
           unityVersion: 6000.0.33f1
           buildsPath: WebGLBuild
 
-      # Отладочный шаг: Показать структуру WebGLBuild
+      # Отладка: Показать структуру WebGLBuild
       - name: Debug WebGLBuild contents
         run: |
           echo "Contents of WebGLBuild:"
           find WebGLBuild -type f
 
+      # Загрузка WebGL билда как артефакта
       - name: Upload WebGL Build
         uses: actions/upload-artifact@v4
         with:
