@@ -1,8 +1,10 @@
 using System;
+using Core.Interfaces;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Zenject;
 
 public class WordPiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
@@ -19,6 +21,7 @@ public class WordPiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     private Vector2 cachedEventDataPosition;
     public RectTransform rectTransform;
     public int Index;
+
     public void Initialize(string fragment, int index)
     {
         this.fragment = fragment;

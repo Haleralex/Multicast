@@ -1,0 +1,37 @@
+{
+    "Words": [
+        {
+            "fullWord": "sunset",
+            "clusters": [
+                "sun",
+                "set"
+            ],
+            "missingClusters": [0]
+        },
+        {
+            "fullWord": "mountain",
+            "clusters": [
+                "moun",
+                "tain"
+            ],
+            "missingClusters": [1]
+        },
+        {
+            "fullWord": "ocean",
+            "clusters": [
+                "o",
+                "ce",
+                "an"
+            ],
+            "missingClusters": [0,1]
+        },
+        {
+            "fullWord": "forest",
+            "clusters": [
+                "for",
+                "est"
+            ],
+            "missingClusters": [1]
+        }
+    ]
+}

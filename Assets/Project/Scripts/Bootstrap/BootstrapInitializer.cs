@@ -6,8 +6,9 @@ using Zenject;
 
 public class BootstrapInitializer : IInitializable
 {
-    [Inject] private readonly AssetLoader assetLoader;
+    [Inject] private readonly IAssetLoader assetLoader;
     [Inject] private readonly MenuLoader menuLoader;
+    [Inject] private readonly IServiceBootstrapper serviceBootstrapper;
 
     public void Initialize()
     {
@@ -18,7 +19,8 @@ public class BootstrapInitializer : IInitializable
     {
         try
         {
-            await assetLoader.LoadAssets(300);
+            await assetLoader.LoadAssets();
+            await serviceBootstrapper.InitializeServicesAsync();
             menuLoader.LoadMenu();
         }
         catch (System.Exception ex)

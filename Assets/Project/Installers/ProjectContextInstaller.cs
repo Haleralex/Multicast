@@ -4,6 +4,7 @@ using Core;
 using Progress;
 using Settings;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using Zenject;
 
 public class ProjectContextInstaller : MonoInstaller<ProjectContextInstaller>
@@ -12,7 +13,6 @@ public class ProjectContextInstaller : MonoInstaller<ProjectContextInstaller>
     {
         Container.Bind<IProgressManager>().To<ProgressManager>().AsSingle();
         Container.Bind<ISceneLoader>().To<AsyncSceneLoader>().AsSingle();
-
         Container.Bind<SettingsModel>().AsSingle();
     }
 }

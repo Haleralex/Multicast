@@ -7,33 +7,31 @@ using Zenject;
 public class LevelView : MonoBehaviour, ILevelView
 {
     public event Action<WordPiece> WordPieceSelected;
+    public event Action<WordPiece> WordPieceMoving;
     public event Action<WordPiece> WordPieceReleased;
     public event Action<WordPiece> WordPieceDoubleClicked;
-    public event Action ValidateLevelPressed;
     public event Action NextLevelPressed;
     public event Action GoToMenuPressed;
 
-    [SerializeField] private Canvas gameFieldCanvas;
-    [SerializeField] private WordPiecesView wordPiecesView;
-    [SerializeField] private WordSlotsView wordSlotsView;
+    
+    [Inject] private readonly IWordPiecesView wordPiecesView;
+    [Inject] private readonly IWordSlotsView wordSlotsView;
     [SerializeField] private LevelControlsView levelControlsView;
     [SerializeField] private LevelCompleteMessageView levelCompleteMessageView;
-
     [SerializeField] private GameObject simpleLoadingScreen; 
 
-    private void Awake()
-    {
-        wordPiecesView.Initialize(gameFieldCanvas);
-    }
 
     private void OnEnable()
     {
         wordPiecesView.WordPieceSelected += OnWordPieceSelected;
+        wordPiecesView.WordPieceMoving += OnWordPieceMoving;
         wordPiecesView.WordPieceReleased += OnWordPieceReleased;
         wordPiecesView.WordPieceDoubleClicked += OnWordPieceDoubleClicked;
 
         levelCompleteMessageView.NextLevelPressed += OnNextLevelPressed;
         levelCompleteMessageView.GoToMenuPressed += GoTomenuPressed;
+
+        levelControlsView.GoToMenuPressed += GoTomenuPressed;
     }
 
     
@@ -41,11 +39,14 @@ public class LevelView : MonoBehaviour, ILevelView
     private void OnDisable()
     {
         wordPiecesView.WordPieceSelected -= OnWordPieceSelected;
+        wordPiecesView.WordPieceMoving -= OnWordPieceMoving;
         wordPiecesView.WordPieceReleased -= OnWordPieceReleased;
         wordPiecesView.WordPieceDoubleClicked -= OnWordPieceDoubleClicked;
 
         levelCompleteMessageView.NextLevelPressed -= OnNextLevelPressed;
         levelCompleteMessageView.GoToMenuPressed -= GoTomenuPressed;
+
+        levelControlsView.GoToMenuPressed -= GoTomenuPressed;
     }
 
     public void SetUIElements(List<WordPieceSlot> slots, List<WordPiece> wordPieces)
@@ -67,7 +68,6 @@ public class LevelView : MonoBehaviour, ILevelView
 
     public void UpdateUIFromMappings(IReadOnlyDictionary<int, int> mappings)
     {
-        wordSlotsView.UpdateSlotsFromMappings(mappings);
         foreach (var mapping in mappings)
         {
             if (wordSlotsView.TryGetSlot(mapping.Value, out var slot))
@@ -75,6 +75,10 @@ public class LevelView : MonoBehaviour, ILevelView
                 wordPiecesView.ChangeWordPieceParent(mapping.Key, slot.transform, true);
             }
         }
+    }
+    public void SetOccupationCondition(MappingUpdate mappings, IReadOnlyDictionary<int, int> wordPieceMappings = null)
+    {
+        wordSlotsView.SetOccupationCondition(mappings,wordPieceMappings);
     }
 
     public WordPieceSlot FindClosestEmptySlot(WordPiece wordPiece, float maxDistance = 10f)
@@ -93,6 +97,11 @@ public class LevelView : MonoBehaviour, ILevelView
         WordPieceSelected?.Invoke(wordPiece);
     }
 
+    private void OnWordPieceMoving(WordPiece wordPiece)
+    {
+        WordPieceMoving?.Invoke(wordPiece);
+    }
+
     private void OnWordPieceReleased(WordPiece wordPiece)
     {
         WordPieceReleased?.Invoke(wordPiece);
@@ -101,11 +110,6 @@ public class LevelView : MonoBehaviour, ILevelView
     private void OnWordPieceDoubleClicked(WordPiece wordPiece)
     {
         WordPieceDoubleClicked?.Invoke(wordPiece);
-    }
-
-    private void OnValidateLevelPressed()
-    {
-        ValidateLevelPressed?.Invoke();
     }
 
     private void OnNextLevelPressed()

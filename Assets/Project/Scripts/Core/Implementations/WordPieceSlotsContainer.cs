@@ -1,13 +1,16 @@
 using System.Collections.Generic;
-using System.Linq;
+using ZLinq;
+using Core.Interfaces;
 using UnityEngine;
 
 public class WordPieceSlotsContainer : MonoBehaviour
 {
     [SerializeField] private List<WordPieceSlot> slots;
+
     public void Initialize(Dictionary<int, string> allFragments,
     Dictionary<int, string> missingFragments)
     {
+        ResetState();
         slots.ForEach(a => a.gameObject.SetActive(false));
         var index = 0;
         foreach (var k in allFragments)
@@ -24,7 +27,11 @@ public class WordPieceSlotsContainer : MonoBehaviour
         }
     }
 
+    public void ResetState()
+    {
+        slots.ForEach(a => a.gameObject.SetActive(false));
+    }
 
     public IReadOnlyCollection<WordPieceSlot> ActiveWordPieceSlots
-        => slots.Where(a => a.gameObject.activeSelf).ToList();
+        => slots.AsValueEnumerable().Where(a => a.gameObject.activeSelf).ToList();
 }

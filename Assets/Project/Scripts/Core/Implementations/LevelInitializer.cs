@@ -1,60 +1,59 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using ZLinq;
+using Core.Implementations;
 using Progress;
-using Unity.VisualScripting;
-using UnityEngine;
 using Utils;
-using Zenject;
+using Core.Interfaces;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 
 public class LevelInitializer : ILevelInitializer
 {
-    [Inject] private readonly List<WordPieceSlotsContainer> wordPieceSlotsContainer;
-    [Inject] private readonly ILevelView levelView;
-    [Inject] private readonly LevelModel levelModel;
-    [Inject] private readonly WordPiecesPool wordPiecesPool;
-    private List<WordPiece> activeWordPieces = new List<WordPiece>();
+    private readonly ILevelView _levelView;
+    private readonly IWordPieceSlotsService _slotsService;
+    private readonly IWordPiecesService _wordPiecesService;
+    private readonly ILevelAnimationService _animationService;
+    private readonly IProgressRestoreService _progressService;
 
-    public void InitializeLevel(
-        Dictionary<int, Dictionary<int, string>> correctMapping,
-        Dictionary<int, string> missingSlots, GameProgress progress = null
-        )
+    public LevelInitializer(
+        ILevelView levelView,
+        IWordPieceSlotsService slotsService,
+        IWordPiecesService wordPiecesService,
+        ILevelAnimationService animationService,
+        IProgressRestoreService progressService)
     {
-        foreach (var wordPiece in activeWordPieces)
-        {
-            wordPiecesPool.ReturnWordPiece(wordPiece);
-        }
-        activeWordPieces.Clear();
-        var wordPieces = new List<WordPiece>();
-        var wordPieceSlots = new List<WordPieceSlot>();
-        var wordIndex = 0;
-        foreach (var correctMap in correctMapping)
-        {
-            wordPieceSlotsContainer[wordIndex]
-                .Initialize(correctMapping[correctMap.Key], missingSlots);
-            wordPieceSlots.AddRange(wordPieceSlotsContainer[wordIndex].ActiveWordPieceSlots.ToList());
-            wordIndex++;
-        }
-        var shuffledMap = correctMapping.Values.ToList();
-        shuffledMap.ShuffleUnity();
-        foreach (var correctMap in shuffledMap)
-        {
-            var strings = correctMap.ToList();
-            strings.Shuffle();
-            var missingPieces = strings.Where(a => missingSlots.ContainsKey(a.Key)).ToList();
-            foreach (var k in missingPieces)
-            {
-                var availableWordPiece = wordPiecesPool.GetWordPiece();
-                availableWordPiece.Initialize(k.Value, k.Key);
-                activeWordPieces.Add(availableWordPiece);
-                wordPieces.Add(availableWordPiece);
-            }
-        }
-        levelView.SetUIElements(wordPieceSlots, wordPieces);
+        _levelView = levelView;
+        _slotsService = slotsService;
+        _wordPiecesService = wordPiecesService;
+        _animationService = animationService;
+        _progressService = progressService;
+    }
 
-        if (progress != null && progress.WordPiecesMapping.Count > 0)
+    public async void InitializeLevel(
+        Dictionary<int, Dictionary<int, string>> correctMapping,
+        Dictionary<int, string> missingSlots,
+        GameProgress progress = null)
+    {
+        await ResetLevel();
+
+        var wordPieceSlots = await _slotsService.CreateWordPieceSlots(correctMapping, missingSlots);
+        var wordPieces = await _wordPiecesService.CreateWordPieces(correctMapping, missingSlots);
+
+        _levelView.SetUIElements(wordPieceSlots, wordPieces);
+        await _animationService.PlayLevelStartAnimation(wordPieces);
+
+        if (progress != null)
         {
-            levelModel.InitializeFromProgress();
+            await _progressService.RestoreProgress(progress);
         }
+    }
+
+
+    private async UniTask ResetLevel()
+    {
+        await UniTask.WhenAll(
+            _slotsService.ResetSlots(),
+            _wordPiecesService.ResetWordPieces()
+        );
     }
 }

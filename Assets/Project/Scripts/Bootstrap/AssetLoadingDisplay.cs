@@ -7,7 +7,7 @@ using Zenject;
 
 public class AssetLoadingDisplay : MonoBehaviour, IInitializable
 {
-    [Inject] private readonly AssetLoader assetLoader;
+    [Inject] private readonly IAssetLoader assetLoader;
     
     [SerializeField] private Slider loadingBar;
     [SerializeField] private TMPro.TextMeshProUGUI nameOfActivity;

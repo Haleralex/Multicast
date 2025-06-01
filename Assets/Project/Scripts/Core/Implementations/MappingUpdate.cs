@@ -14,8 +14,8 @@ public class MappingUpdate
     public static MappingUpdate AddOrUpdate(int wordPieceId, int slotId) =>
         new MappingUpdate(UpdateType.Add, wordPieceId, slotId);
 
-    public static MappingUpdate Remove(int wordPieceId) =>
-        new MappingUpdate(UpdateType.Remove, wordPieceId, null);
+    public static MappingUpdate Remove(int wordPieceId, int? slotId) =>
+        new MappingUpdate(UpdateType.Remove, wordPieceId, slotId);
 
     public static MappingUpdate Clear() =>
         new MappingUpdate(UpdateType.Clear, null, null);

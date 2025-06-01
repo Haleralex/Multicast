@@ -3,33 +3,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
-public class WordPiecesView : MonoBehaviour
+public class WordPiecesView : IWordPiecesView, ITickable, IDisposable, IInitializable
 {
     public event Action<WordPiece> WordPieceSelected;
+    public event Action<WordPiece> WordPieceMoving;
     public event Action<WordPiece> WordPieceReleased;
     public event Action<WordPiece> WordPieceDoubleClicked;
 
-    [SerializeField] private Transform draggingParent;
+    private readonly Transform draggingParent;
+    private readonly Canvas gameFieldCanvas;
 
-    private Dictionary<int, WordPiece> wordPieces = new Dictionary<int, WordPiece>();
+    private readonly Dictionary<int, WordPiece> wordPieces =
+        new();
     private WordPiece selectedWordPiece;
-    private Canvas gameFieldCanvas;
     private RectTransform gameFieldCanvasRectTransform;
 
-    private class WordPieceInitialState
+    private Dictionary<int, WordPieceInitialState> wordPiecesInitialStates
+        = new();
+    
+    [Inject]
+    public WordPiecesView([Inject(Id = "DraggingParent")]Transform draggingParent,
+        [Inject(Id = "GameFieldCanvas")]Canvas gameFieldCanvas)
     {
-        public Transform OriginalParent;
-        public int OriginalSiblingIndex;
-    }
-
-    private Dictionary<int, WordPieceInitialState> wordPiecesInitialStates = new Dictionary<int, WordPieceInitialState>();
-
-    public void Initialize(Canvas gameFieldCanvas)
-    {
+        this.draggingParent = draggingParent;
         this.gameFieldCanvas = gameFieldCanvas;
-        this.gameFieldCanvasRectTransform = gameFieldCanvas.GetComponent<RectTransform>();
     }
+
+    public void Initialize()
+    {
+        gameFieldCanvasRectTransform
+            = gameFieldCanvas.GetComponent<RectTransform>();
+    }
+
 
     public void SetWordPieces(List<WordPiece> pieces)
     {
@@ -78,10 +85,7 @@ public class WordPiecesView : MonoBehaviour
         }
     }
 
-    public IEnumerable<WordPiece> GetAllWordPieces()
-    {
-        return wordPieces.Values;
-    }
+    public IEnumerable<WordPiece> GetAllWordPieces() => wordPieces.Values;
 
     public bool TryGetWordPiece(int index, out WordPiece wordPiece)
     {
@@ -128,7 +132,7 @@ public class WordPiecesView : MonoBehaviour
         WordPieceDoubleClicked?.Invoke(wordPiece);
     }
 
-    private void Update()
+    public void Tick()
     {
         if (selectedWordPiece == null) return;
 
@@ -139,9 +143,10 @@ public class WordPiecesView : MonoBehaviour
             out Vector3 worldPos);
 
         selectedWordPiece.rectTransform.position = new Vector3(worldPos.x, worldPos.y, selectedWordPiece.rectTransform.position.z);
+        WordPieceMoving?.Invoke(selectedWordPiece);
     }
 
-    private void OnDisable()
+    public void Dispose()
     {
         foreach (var wordPiece in wordPieces.Values)
         {
