@@ -27,70 +27,20 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_PROJECT_ID: ${{ secrets.UNITY_PROJECT_ID }}
-          UNITY_ORGANIZATION_ID: ${{ secrets.UNITY_ORGANIZATION_ID }}
-          CLOUD_CONTENT_DELIVERY_ACCESS_TOKEN: ${{ secrets.CCD_ACCESS_TOKEN }}
         with:
           targetPlatform: WebGL
           unityVersion: 6000.0.33f1
-          buildsPath: WebGLBuild
-          buildName: WebGL
+          buildPath: WebGLBuild
 
       # Отладочный шаг: Показать структуру WebGLBuild
       - name: Debug WebGLBuild contents
         run: |
-          echo "Contents of build directory:"
-          ls -la
-          if [ -d "build" ]; then
-            echo "Contents of build/:"
-            find build -type f | head -20
-          fi
-          if [ -d "WebGLBuild" ]; then
-            echo "Contents of WebGLBuild:"
-            find WebGLBuild -type f | head -20
-          else
-            echo "WebGLBuild directory not found"
-          fi
-
-      # Перемещение файлов из build в WebGLBuild
-      - name: Move build files
-        run: |
-          echo "=== ДИАГНОСТИКА СТРУКТУРЫ ==="
-          echo "Полная структура WebGLBuild:"
-          find WebGLBuild -type f | head -30
-          echo ""
-          
-          # Проверяем разные варианты структуры
-          if [ -d "WebGLBuild/WebGL/WebGL" ]; then
-            echo "Found DOUBLE nested structure: WebGLBuild/WebGL/WebGL"
-            # Исправляем права
-            sudo chown -R runner:docker WebGLBuild/
-            # Перемещаем из двойной вложенности
-            cp -rf WebGLBuild/WebGL/WebGL/* WebGLBuild/
-            rm -rf WebGLBuild/WebGL
-            echo "Successfully moved from WebGLBuild/WebGL/WebGL/* to WebGLBuild/"
-          elif [ -d "WebGLBuild/WebGL" ]; then
-            echo "Found WebGLBuild/WebGL, copying contents to root"
-            sudo chown -R runner:docker WebGLBuild/
-            cp -rf WebGLBuild/WebGL/* WebGLBuild/
-            rm -rf WebGLBuild/WebGL
-            echo "Successfully moved WebGL build files"
-          else
-            echo "WebGLBuild structure not recognized!"
-            echo "Available directories:"
-            find WebGLBuild -type d | sort
-          fi
-          
-          echo "=== РЕЗУЛЬТАТ ПЕРЕМЕЩЕНИЯ ==="
-          echo "Содержимое WebGLBuild после перемещения:"
-          find WebGLBuild -maxdepth 2 -type f | sort
+          echo "Contents of WebGLBuild:"
+          find WebGLBuild -type f
 
       # Перемещение index.html и связанных файлов в корень
       - name: Prepare files for deployment
         run: |
-          # Убеждаемся что права правильные
-          sudo chown -R runner:docker WebGLBuild/ 2>/dev/null || true
-          
           if [ -f WebGLBuild/index.html ]; then
             echo "index.html found in WebGLBuild root"
           else
@@ -98,7 +48,9 @@ jobs:
             found=$(find WebGLBuild -name "index.html" -type f)
             if [ -n "$found" ]; then
               echo "Found index.html at $found"
+              # Перемещаем все файлы из папки с index.html в корень WebGLBuild
               mv $(dirname "$found")/* WebGLBuild/
+              # Удаляем пустую подпапку (например, Build), если она осталась
               find WebGLBuild -type d -empty -delete
             else
               echo "Error: index.html not found in WebGLBuild"
